@@ -19,9 +19,7 @@ class Chicken extends moveableObject{
     animate(){
         this.moveLeft();
         setInterval(()=>{
-        let i = this.currentImage % this.walkingImages.length;
-        let path = this.walkingImages[i];  /*mit currentImage steuert man die verschiedenen Schlüssel des JSONs imageCache an*/
-        this.img = this.imageCache[path];              /*das img tag wird das img Element aus dem JSON mit dem benannten Schlüssel*/
-        this.currentImage++;},200)
+            this.playAnimation(this.walkingImages);
+        },200)
      }
 }

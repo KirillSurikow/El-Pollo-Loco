@@ -14,38 +14,38 @@ function init(){
 }
 
 window.addEventListener('keydown',(e) =>{  // es wird eine Abfrage gemacht , welche Taste gedrückt wird und mit den beiden Variablen keyboard und der Taste verknüft
-    if (e.keycode == 39){
+    if (e.keyCode == 39){
         keyboard.RIGHT= true;  // mit keyboard.RIGHT kann man die Variablen von Keyboader() ansteuern
     }
-    if (e.keycode == 37){
+    if (e.keyCode == 37){
         keyboard.LEFT= true;
     }
-    if (e.keycode == 38){
+    if (e.keyCode == 38){
         keyboard.UP= true;
     }
-    if (e.keycode == 40){
+    if (e.keyCode == 40){
         keyboard.DOWN= true;
     }
-    if (e.keycode == 32){
+    if (e.keyCode == 32){
         keyboard.SPACE= true;
     }
     console.log(e);
 });
 
 window.addEventListener('keyup',(e) =>{
-    if (e.keycode == 39){
+    if (e.keyCode == 39){
         keyboard.RIGHT= false;
     }
-    if (e.keycode == 37){
+    if (e.keyCode == 37){
         keyboard.LEFT= false;
     }
-    if (e.keycode == 38){
+    if (e.keyCode == 38){
         keyboard.UP= false;
     }
-    if (e.keycode == 40){
+    if (e.keyCode == 40){
         keyboard.DOWN= false;
     }
-    if (e.keycode == 32){
+    if (e.keyCode == 32){
         keyboard.SPACE= false;
     }
     console.log(e);
