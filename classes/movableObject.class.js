@@ -13,15 +13,15 @@ class moveableObject {
 
     applyGravity() {
         setInterval(() => {
-            if (this.isAboveGround()) {
+            if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             }
         }, 1000 / 25)
     }
 
-    isAboveGround(){
-        return this.y <  180
+    isAboveGround() {
+        return this.y < 180;
     }
 
     loadImage(path) {
@@ -37,14 +37,16 @@ class moveableObject {
         });
     }
 
+    draw(ctx) {
+        ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height)   /*drawImage ist eine vordefinierte Funktion. er erwartet an für img ein Bild*/
+    }
+
     moveLeft() {
-        setInterval(() => {
-            this.x -= this.speed;
-        }, 1000 / 60);
+        this.x -= this.speed
     }
 
     moveRight() {
-        console.log('moving Right')
+        this.x += this.speed;
     };
 
     playAnimation(images) {
@@ -52,5 +54,9 @@ class moveableObject {
         let path = images[i];  /*mit currentImage steuert man die verschiedenen Schlüssel des JSONs imageCache an*/
         this.img = this.imageCache[path];              /*das img tag wird das img Element aus dem JSON mit dem benannten Schlüssel*/
         this.currentImage++;
+    }
+
+    jump() {
+        this.speedY = 30;
     }
 }

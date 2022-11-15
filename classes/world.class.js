@@ -48,12 +48,15 @@ class World {
             this.ctx.scale(-1, 1);
             mo.x = mo.x * -1;
         }
-        try {
-            this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height)   /*drawImage ist eine vordefinierte Funktion. er erwartet an für img ein Bild*/
-        } catch (e) {
-            console.warn('Error loading image',e);
-            console.log('could not load',this.img);
-        }
+
+        mo.draw(this.ctx);
+       
+        
+        this.ctx.beginPath();
+        this.ctx.lineWidth = '5';
+        this.ctx.strokeStyle = 'blue';
+        this.ctx.rect(mo.x, mo.y, mo.width, mo.height);
+        this.ctx.stroke();
         if (mo.otherDirection) {
             mo.x = mo.x * -1;
             this.ctx.restore();  // hier werden wieder die alten Eigenschaften vom Canvas angenommen
