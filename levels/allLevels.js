@@ -1,7 +1,9 @@
 class AllLevels {
 
+  initLevel() {
 
-    level1 = new Level(
+
+     level1 = new Level(
         [
             new Chicken(),
             new Chicken(),
@@ -39,7 +41,6 @@ class AllLevels {
 
         ]
     );
-    constructor(){
-        
-    }
+    return level1
+}
 }

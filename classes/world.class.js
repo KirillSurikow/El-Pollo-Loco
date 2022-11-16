@@ -17,7 +17,7 @@ class World {
         this.start = new Start();
         console.log(this.start)
         this.drawStartScreen();
-        this.requestStart();
+        this.checkRequestStart();
         // this.draw();
         // this.setWorld();
         // this.checkCollisions();
@@ -32,21 +32,24 @@ class World {
         });
     }
 
-    requestStart() {
+   checkRequestStart() {
         setInterval(() => {
-            if (this.keyboard.ENTER) {
-                console.log('start')
-                this.character = new Character();
-                this.setWorld();
-                this.level = AllLevels;
-                this.draw();
-                this.checkCollisions();
-                this.run()
-            }  
+            if (this.keyboard.ENTER){
+                this.initGame();
+            }   
         }, 50);
-        
     }
 
+    initGame(){
+        console.log('start')
+        this.character = new Character();
+        this.setWorld();
+        this.level = AllLevels.lev;
+        this.draw();
+        this.checkCollisions();
+        this.run()
+    }
+   
     setWorld() {
         this.character.world = this;  // setWorld übergibt die komplette Instanz World an die Variable World in der Klasse character
     }

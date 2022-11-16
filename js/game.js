@@ -29,9 +29,6 @@ window.addEventListener('keydown',(e) =>{  // es wird eine Abfrage gemacht , wel
     if (e.keyCode == 32){
         keyboard.SPACE= true;
     }
-    if (e.keyCode == 13){
-        keyboard.ENTER= true;
-    }
     if (e.keyCode == 68){
         keyboard.D= true;
     }
@@ -55,11 +52,14 @@ window.addEventListener('keyup',(e) =>{
     if (e.keyCode == 32){
         keyboard.SPACE= false;
     }
-    if (e.keyCode == 13){
-        keyboard.ENTER= false;
-    }
     if (e.keyCode == 68){
         keyboard.D= false;
     }
     console.log(e);
 });
+
+window.addEventListener('keypress',(e) =>{
+    if (e.keyCode == 13){
+        keyboard.ENTER= true;
+    }
+})
