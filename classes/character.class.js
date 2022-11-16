@@ -22,12 +22,30 @@ class Character extends moveableObject {
         'img/2_character_pepe/3_jump/J-38.png',
         'img/2_character_pepe/3_jump/J-39.png'
     ]
+
+    deadImages = [
+        'img/2_character_pepe/5_dead/D-51.png',
+        'img/2_character_pepe/5_dead/D-52.png',
+        'img/2_character_pepe/5_dead/D-53.png',
+        'img/2_character_pepe/5_dead/D-54.png',
+        'img/2_character_pepe/5_dead/D-55.png',
+        'img/2_character_pepe/5_dead/D-56.png',
+        'img/2_character_pepe/5_dead/D-57.png'
+    ]
+
+    hurtImages = [
+        'img/2_character_pepe/4_hurt/H-41.png',
+        'img/2_character_pepe/4_hurt/H-42.png',
+        'img/2_character_pepe/4_hurt/H-43.png'
+    ]
     world;  // character nimmt hier die Instanz World auf und kann somit auf die Variablen der world zugreifen wie z.B. keyboard
     walking_sound = new Audio('audio/walking.mp3')
     constructor() {
         super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
         this.loadImages(this.walkingImages);          /* Befehl wird an die superklasse weitergegeben*/
         this.loadImages(this.jumpingImages);
+        this.loadImages(this.deadImages);
+        this.loadImages(this.hurtImages);
         this.animate();                                /*mit einem Parameter (dem Array)*/
         this.applyGravity();
     };
@@ -54,6 +72,12 @@ class Character extends moveableObject {
 
 
         setInterval(() => {
+            if(this.isDead()){
+                this.playAnimation(this.deadImages);
+            } else
+            if(this.isHurt()){
+                this.playAnimation(this.hurtImages);
+            }else
             if (this.isAboveGround()) {
                 this.playAnimation(this.jumpingImages);
             } else {

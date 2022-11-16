@@ -1,15 +1,10 @@
-class moveableObject {
-    x = 120;
-    y = 250;
-    img;
-    height = 150;
-    width = 100;
-    imageCache = {};
-    currentImage = 0;
+class moveableObject extends DrawAbleObject {
     speed = 0.15;
     otherDirection = false;
     speedY = 0;
     acceleration = 2.5;
+    energy = 100;
+    lastHit = 0;
 
     applyGravity() {
         setInterval(() => {
@@ -21,24 +16,19 @@ class moveableObject {
     }
 
     isAboveGround() {
-        return this.y < 180;
+        if (this instanceof ThrowableObject) {
+            return true
+        } else {
+            return this.y < 180;
+        }
     }
 
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-    }
 
-    loadImages(arr) {     /* diese Funktion ist in Verbindung mit animate() zubetrachten*/
-        arr.forEach(path => {  /*jedes Element wird der Variable path zugeordnet*/
-            let img = new Image();  /* für jedes Element aus dem Array wird wird ein img erstellt und je der Variable img zugeordnet*/
-            img.src = path;     /*die src des imgs wird der Variable path zugeordnet*//*beachte this. wird nicht verwendet*/
-            this.imageCache[path] = img;  /*der path ist der Schlüssel zum img mit dem selben path*/
-        });
-    }
-
-    draw(ctx) {
-        ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height)   /*drawImage ist eine vordefinierte Funktion. er erwartet an für img ein Bild*/
+    isColliding(mo) {
+        return this.x + this.width > mo.x &&
+            this.y + this.height > mo.y &&
+            this.x + mo.x &&
+            this.y < mo.y + mo.height;
     }
 
     moveLeft() {
@@ -50,7 +40,7 @@ class moveableObject {
     };
 
     playAnimation(images) {
-        let i = this.currentImage % this.walkingImages.length;
+        let i = this.currentImage % images.length;
         let path = images[i];  /*mit currentImage steuert man die verschiedenen Schlüssel des JSONs imageCache an*/
         this.img = this.imageCache[path];              /*das img tag wird das img Element aus dem JSON mit dem benannten Schlüssel*/
         this.currentImage++;
@@ -58,5 +48,25 @@ class moveableObject {
 
     jump() {
         this.speedY = 30;
+    }
+
+    hit() {
+        this.energy -= 5;
+        if (this.energy <= 0) {
+            this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime();
+
+        }
+    }
+
+    isDead() {
+        return this.energy == 0;
+    }
+
+    isHurt() {
+        let timePassed = new Date().getTime() - this.lastHit;
+        timePassed = timePassed / 1000;
+        return timePassed < 1.5;
     }
 }
