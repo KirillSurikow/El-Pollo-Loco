@@ -14,6 +14,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard; // die Variable keyboard aus der Klasse game wird zu der eigenen Variable keyboard
+        this.drawStartScreen();
         this.requestStart();
         // this.draw();
         this.setWorld();
@@ -27,7 +28,7 @@ class World {
 
     requestStart(){
         if(this.keyboard.ENTER){
-            this.draw();
+            // this.draw();
         }
     }
 
@@ -62,23 +63,23 @@ class World {
 
     }
 
-    draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.camera_x, 0)  // Das Bild verschiebt sich um die vordefinierte Pixelzahl
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.level.enemies);
-        this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.throwableObjects);
-        this.ctx.translate(-this.camera_x, 0)
-        this.addToMap(this.statusbar);
-        this.ctx.translate(this.camera_x, 0)
-        this.ctx.translate(-this.camera_x, 0)
-        let self = this;
-        requestAnimationFrame(function () {
-            self.draw()
-        });
-    }
+    // draw() {
+    //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //     this.ctx.translate(this.camera_x, 0)  // Das Bild verschiebt sich um die vordefinierte Pixelzahl
+    //     this.addObjectsToMap(this.level.backgroundObjects);
+    //     this.addToMap(this.character);
+    //     this.addObjectsToMap(this.level.enemies);
+    //     this.addObjectsToMap(this.level.clouds);
+    //     this.addObjectsToMap(this.throwableObjects);
+    //     this.ctx.translate(-this.camera_x, 0)
+    //     this.addToMap(this.statusbar);
+    //     this.ctx.translate(this.camera_x, 0)
+    //     this.ctx.translate(-this.camera_x, 0)
+    //     let self = this;
+    //     requestAnimationFrame(function () {
+    //         self.draw()
+    //     });
+    // }
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);

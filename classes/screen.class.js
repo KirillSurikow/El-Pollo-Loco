@@ -1,4 +1,4 @@
-class screen extends DrawAbleObject{
+class Screen extends DrawAbleObject{
     x = 0;
     y = 0;
     width = 720;
