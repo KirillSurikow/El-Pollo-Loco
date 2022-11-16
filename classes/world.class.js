@@ -1,7 +1,7 @@
 class World {
-    start = new Start();
-    character = new Character(); /* ruft die Klasse Character auf*/
-    level = level1;
+    start;
+    character;
+    level;
     canvas;
     ctx;
     keyboard;  //
@@ -14,22 +14,37 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard; // die Variable keyboard aus der Klasse game wird zu der eigenen Variable keyboard
+        this.start = new Start();
+        console.log(this.start)
         this.drawStartScreen();
         this.requestStart();
         // this.draw();
-        this.setWorld();
-        this.checkCollisions();
-        this.run()
+        // this.setWorld();
+        // this.checkCollisions();
+        // this.run()
     }
 
-    drawStartScreen(){
+    drawStartScreen() {
         this.addToMap(this.start);
+        let self = this;
+        requestAnimationFrame(function () {
+            self.drawStartScreen()
+        });
     }
 
-    requestStart(){
-        if(this.keyboard.ENTER){
-            // this.draw();
-        }
+    requestStart() {
+        setInterval(() => {
+            if (this.keyboard.ENTER) {
+                console.log('start')
+                this.character = new Character();
+                this.setWorld();
+                this.level = AllLevels;
+                this.draw();
+                this.checkCollisions();
+                this.run()
+            }  
+        }, 50);
+        
     }
 
     setWorld() {
@@ -45,7 +60,7 @@ class World {
 
     checkThrowObjects() {
         if (this.keyboard.D) {
-            let bottle = new ThrowableObject(this.character.x +100 , this.character.y + 100);
+            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
             this.throwableObjects.push(bottle)
         }
     }
@@ -63,23 +78,23 @@ class World {
 
     }
 
-    // draw() {
-    //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //     this.ctx.translate(this.camera_x, 0)  // Das Bild verschiebt sich um die vordefinierte Pixelzahl
-    //     this.addObjectsToMap(this.level.backgroundObjects);
-    //     this.addToMap(this.character);
-    //     this.addObjectsToMap(this.level.enemies);
-    //     this.addObjectsToMap(this.level.clouds);
-    //     this.addObjectsToMap(this.throwableObjects);
-    //     this.ctx.translate(-this.camera_x, 0)
-    //     this.addToMap(this.statusbar);
-    //     this.ctx.translate(this.camera_x, 0)
-    //     this.ctx.translate(-this.camera_x, 0)
-    //     let self = this;
-    //     requestAnimationFrame(function () {
-    //         self.draw()
-    //     });
-    // }
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.translate(this.camera_x, 0)  // Das Bild verschiebt sich um die vordefinierte Pixelzahl
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.throwableObjects);
+        this.ctx.translate(-this.camera_x, 0)
+        this.addToMap(this.statusbar);
+        this.ctx.translate(this.camera_x, 0)
+        this.ctx.translate(-this.camera_x, 0)
+        let self = this;
+        requestAnimationFrame(function () {
+            self.draw()
+        });
+    }
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
