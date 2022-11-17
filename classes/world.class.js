@@ -69,15 +69,19 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D) {
+        if (this.keyboard.D && this.character.bottles > 0) {
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-            this.throwableObjects.push(bottle)
+            this.throwableObjects.push(bottle);
+            this.character.bottles--;
+            this.updateBottleBar();
         }
     }
 
     checkCollisions() {
         this.collisionWithEnemies();
         this.collisionWithCoins();
+        this.collisionWithBottles();
+        this.hitBottle();
     }
 
     collisionWithEnemies() {
@@ -95,12 +99,64 @@ class World {
         this.level.coins.forEach(coin => {
             if (this.character.isColliding(coin)) {
                 console.log('collision with coin',coin.id);
-                this.level.coins.splice(coin.id,1);
+                this.removeCoin(coin.id)
                 this.character.coins++
-                // this.character.energy -= 5;
-                // this.healthBar.setPercentage(this.character.energy, this.healthBar.ImagesHealth)
+                this.updateCoinBar();
             }
         })   
+    }
+
+    removeCoin(id){
+        for (let i = 0; i < this.level.coins.length; i++) {
+            let coinID = this.level.coins[i].id;
+            if(coinID == id){
+                this.level.coins.splice(i,1);  
+            }
+        }
+    }
+
+    updateCoinBar(){
+        console.log('updating')
+        let progress = Math.round((this.character.coins / this.level.coins.length)*100);
+        this.coinBar.setPercentage(progress,this.coinBar.ImagesCoin);
+    }
+
+    collisionWithBottles(){
+        this.level.bottles.forEach(bottle => {
+            if (this.character.isColliding(bottle)) {
+                console.log('collision with coin',bottle.id);
+                this.removeBottle(bottle.id)
+                this.character.bottles++
+                this.updateBottleBar();
+            }
+        })   
+    }
+
+    updateBottleBar(){
+        let progress = Math.round((this.character.bottles / this.level.bottles.length)*100);
+        this.bottleBar.setPercentage(progress,this.bottleBar.ImagesBottle);
+    }
+
+    removeBottle(id){
+        for (let i = 0; i < this.level.bottles.length; i++) {
+            let bottleID = this.level.bottles[i].id;
+            if(bottleID == id){
+                this.level.bottles.splice(i,1);  
+            }
+        }
+    }
+
+    hitBottle(){
+        this.throwableObjects.forEach(bottle => {
+          this.level.enemies.forEach(enemy => {
+            if(bottle.isColliding(enemy))
+               this.showDeadChicken(enemy)
+          });
+        }) 
+    }
+
+    showDeadChicken(enemy){
+        enemy.dead = true;
     }
 
     draw() {

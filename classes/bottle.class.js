@@ -22,6 +22,6 @@ class Bottle extends CollectableObject{
     }
 
     randomImage(array){
-        return array[Math.floor(Math.random()*array.length)];
+        return array[Math.floor(Math.random()*array.length)];  
     }
 }

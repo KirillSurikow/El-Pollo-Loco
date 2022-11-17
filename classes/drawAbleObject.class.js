@@ -20,8 +20,15 @@ class DrawAbleObject{
         });
     }
 
+     
     draw(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height)   /*drawImage ist eine vordefinierte Funktion. er erwartet an für img ein Bild*/
+        try {
+            ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+        } catch (e) {
+            console.log(e)
+        }
+           /*drawImage ist eine vordefinierte Funktion. er erwartet an für img ein Bild*/
+   
     }
 
     drawBorder(ctx) {
