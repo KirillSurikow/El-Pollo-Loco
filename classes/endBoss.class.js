@@ -3,6 +3,12 @@ class Endboss extends moveableObject{
    width = 250;
    y = 55;
    x = 2500;
+   offset = {
+    top : 0,
+    bottom : 0,
+    left : 0,
+    right : 0
+}
 
 
     walkingImages = [

@@ -2,6 +2,13 @@ class Character extends moveableObject {
     height = 250;
     y = 0;
     speed = 10;
+    offset = {
+        top : 110,
+        bottom : 10,
+        left : 20,
+        right : 25
+    }
+    coins = 0;
     walkingImages = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -72,21 +79,23 @@ class Character extends moveableObject {
 
 
         setInterval(() => {
-            if(this.isDead()){
+            if (this.isDead()) {
                 this.playAnimation(this.deadImages);
             } else
-            if(this.isHurt()){
-                this.playAnimation(this.hurtImages);
-            }else
-            if (this.isAboveGround()) {
-                this.playAnimation(this.jumpingImages);
-            } else {
-                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // man fragt ab, ob die Taste rechts gedrückt ist
-                    this.playAnimation(this.walkingImages);
-                }
-            }
+                if (this.isHurt()) {
+                    this.playAnimation(this.hurtImages);
+                } else
+                    if (this.isAboveGround()) {
+                        this.playAnimation(this.jumpingImages);
+                    } else {
+                        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // man fragt ab, ob die Taste rechts gedrückt ist
+                            this.playAnimation(this.walkingImages);
+                        }
+                    }
         }
             , 50)
 
     }
+
+ 
 }

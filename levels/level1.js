@@ -1,9 +1,7 @@
-class AllLevels {
+let level1;
 
-  initLevel() {
-
-
-     level1 = new Level(
+ function initLevel() {
+    level1 = new Level(
         [
             new Chicken(),
             new Chicken(),
@@ -39,8 +37,47 @@ class AllLevels {
             new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 719 * 3),
             new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 719 * 3),
 
+        ],
+        [
+            new Bottle(0),
+            new Bottle(1),
+            new Bottle(2),
+            new Bottle(3),
+            new Bottle(4),
+            new Bottle(5),
+            new Bottle(6),
+            new Bottle(7),
+            new Bottle(8),
+            new Bottle(9),
+            new Bottle(10),
+            new Bottle(11),
+            new Bottle(12),
+            new Bottle(13),
+            new Bottle(14),
+        ],
+        [
+            new Coin(0),
+            new Coin(1),
+            new Coin(2),
+            new Coin(3),
+            new Coin(4),
+            new Coin(5),
+            new Coin(6),
+            new Coin(7),
+            new Coin(8),
+            new Coin(9),
+            new Coin(10),
+            new Coin(11),
+            new Coin(12),
+            new Coin(13),
+            new Coin(14),
+            new Coin(15),
+            new Coin(16),
+            new Coin(17),
         ]
     );
+
+    
     return level1
 }
-}
+
