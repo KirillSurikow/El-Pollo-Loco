@@ -87,8 +87,8 @@ class World {
     collisionWithEnemies() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
-                
-                this.character.hit()
+                console.log('hit by', enemy);
+                this.character.hit();
                 this.character.energy -= 5;
                 this.healthBar.setPercentage(this.character.energy, this.healthBar.ImagesHealth)
             }
@@ -150,6 +150,7 @@ class World {
         this.throwableObjects.forEach(bottle => {
           this.level.enemies.forEach(enemy => {
             if(bottle.isColliding(enemy))
+               console.log('hit',enemy)
                this.showDeadChicken(enemy)
           });
         }) 
