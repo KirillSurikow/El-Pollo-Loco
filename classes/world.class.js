@@ -13,6 +13,7 @@ class World {
     throwableObjects = [];
     collisionFromAbove = false;
     gameOver;
+    // loss;
 
 
     constructor(canvas, keyboard) {
@@ -82,13 +83,13 @@ class World {
 
     checkLoss(){
         if(this.character.energy == 0){
-            this.drawGameOver();
+            // this.drawLoss();
         }
     };
 
-    drawGameOver(){
-        
-    }
+    // drawLoss(){
+    //     this.loss = new Loss();
+    // }
 
     drawWinScreen(){
         this.gameOver = new GameOver();
@@ -235,6 +236,7 @@ class World {
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0)
         this.addToMap(this.gameOver);
+        // this.addToMap(this.loss);
         this.addToMap(this.healthBar);
         this.addToMap(this.coinBar);
         this.addToMap(this.bottleBar);
@@ -253,20 +255,18 @@ class World {
     }
 
     addToMap(mo) {
-
-        if (mo.otherDirection) {
-            this.flipImage(mo)
-        }
-        
-
-        mo.draw(this.ctx); // mo steht stellvertretend für die Instanz object. Die Instanz moveableObject wird hier als mo durchgereicht.
-        // mo.drawBorder(this.ctx);
-
-
-        if (mo.otherDirection) {
-            this.flipImageBack(mo);
-        }
-
+            if (mo.otherDirection) {
+                this.flipImage(mo)
+            }
+            
+    
+            mo.draw(this.ctx); // mo steht stellvertretend für die Instanz object. Die Instanz moveableObject wird hier als mo durchgereicht.
+            // mo.drawBorder(this.ctx);
+    
+    
+            if (mo.otherDirection) {
+                this.flipImageBack(mo);
+            }   
     }
 
     flipImage(mo) {

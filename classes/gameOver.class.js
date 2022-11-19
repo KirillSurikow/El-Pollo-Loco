@@ -1,11 +1,8 @@
 class GameOver extends Screen{
-
+    
 
     constructor(){
         super();
-        this.x = 200;
-        this.y = 300;
-        this.width = 250;
-        this.height = 150;
+        this.loadImage('img/9_intro_outro_screens/game_over/game over!.png');
     }
 }
