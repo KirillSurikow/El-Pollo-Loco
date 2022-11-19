@@ -31,27 +31,40 @@ class DrawAbleObject{
    
     }
 
-    drawBorder(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof Coin || this instanceof Bottle  ){
-            ctx.beginPath();
-            ctx.lineWidth = '5';
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
-            ctx.stroke();
+    // drawBorder(ctx) {
+    //     if (this instanceof Character || this instanceof Chicken){
+    //         ctx.beginPath();
+    //         ctx.lineWidth = '5';
+    //         ctx.strokeStyle = 'blue';
+    //         ctx.rect(this.x, this.y, this.width, this.height);
+    //         ctx.stroke();
 
-            ctx.beginPath();
-            ctx.lineWidth = '5';
-            ctx.strokeStyle = 'red';
-            ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom) ;
-            ctx.stroke();
-        }
-    }
+    //         ctx.beginPath();
+    //         ctx.lineWidth = '5';
+    //         ctx.strokeStyle = 'red';
+    //         ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom) ;
+    //         ctx.stroke();
+
+    //         ctx.beginPath();
+    //         ctx.lineWidth = '5';
+    //         ctx.strokeStyle = 'green';
+    //         ctx.rect(this.x + this.landZone.left, this.y + this.landZone.top, this.width - this.landZone.left - this.landZone.right, this.height - this.landZone.top - this.landZone.bottom) ;
+    //         ctx.stroke();
+    //     }
+    // }
 
     isColliding(obj) {
         return this.x + this.width - this.offset.right > obj.x + obj.offset.left &&
         this.y + this.height - this.offset.bottom > obj.y + obj.offset.top &&
         this.x + this.offset.left < obj.x + obj.width - obj.offset.right &&
         this.y + this.offset.top < obj.y + obj.height - obj.offset.bottom
+    }
+
+    isJLandingOn(obj) {
+        return this.x + this.width - this.landZone.right > obj.x + obj.landZone.left &&
+        this.y + this.height - this.landZone.bottom > obj.y + obj.landZone.top &&
+        this.x + this.landZone.left < obj.x + obj.width - obj.landZone.right &&
+        this.y + this.landZone.top < obj.y + obj.height - obj.landZone.bottom
     }
 
 }

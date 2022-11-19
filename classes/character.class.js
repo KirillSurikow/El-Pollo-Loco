@@ -3,11 +3,18 @@ class Character extends moveableObject {
     y = 0;
     speed = 10;
     offset = {
-        top : 110,
-        bottom : 10,
-        left : 20,
-        right : 25
-    }
+        top: 110,
+        bottom: 10,
+        left: 20,
+        right: 25
+    };
+
+    landZone = {
+        top: 240,
+        bottom: 0,
+        left: 20,
+        right: 25
+    };
     coins = 0;
     bottles = 0;
     walkingImages = [
@@ -59,20 +66,21 @@ class Character extends moveableObject {
     };
 
     animate() {
+        let i = 0;
         setInterval(() => {
             this.walking_sound.pause();
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.energy > 0) {
                 this.moveRight();
                 this.otherDirection = false;
                 this.walking_sound.play();
             }
-            if (this.world.keyboard.LEFT && this.x > 0) {
+            if (this.world.keyboard.LEFT && this.x > 0 && this.energy > 0) {
                 this.moveLeft();
                 this.otherDirection = true;
                 this.walking_sound.play();
             }
 
-            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+            if (this.world.keyboard.SPACE && !this.isAboveGround() && this.energy > 0) {
                 this.jump();
             }
             this.world.camera_x = -this.x + 100;
@@ -80,23 +88,24 @@ class Character extends moveableObject {
 
 
         setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.deadImages);
+            if (this.isHurt()) {
+                this.playAnimation(this.hurtImages);
             } else
-                if (this.isHurt()) {
-                    this.playAnimation(this.hurtImages);
-                } else
-                    if (this.isAboveGround()) {
-                        this.playAnimation(this.jumpingImages);
-                    } else {
-                        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) { // man fragt ab, ob die Taste rechts gedrückt ist
-                            this.playAnimation(this.walkingImages);
-                        }
+                if (this.isAboveGround()) {
+                    this.playAnimation(this.jumpingImages);
+                } else {
+                    if (this.world.keyboard.RIGHT && this.energy > 0 || this.world.keyboard.LEFT && this.energy > 0) { // man fragt ab, ob die Taste rechts gedrückt ist
+                        this.playAnimation(this.walkingImages);
                     }
-        }
-            , 50)
-
+                }
+        } , 50)
+        setInterval(() => {
+            if (this.isDead() && i < 7) {
+                this.playAnimation(this.deadImages);
+                i++;
+            }
+        }, 200);
     }
 
- 
+
 }

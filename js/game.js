@@ -33,7 +33,7 @@ window.addEventListener('keydown',(e) =>{  // es wird eine Abfrage gemacht , wel
         keyboard.D= true;
     }
     
-    // console.log(e);
+    console.log(e);
 });
 
 window.addEventListener('keyup',(e) =>{
@@ -55,11 +55,13 @@ window.addEventListener('keyup',(e) =>{
     if (e.keyCode == 68){
         keyboard.D= false;
     }
-    // console.log(e);
 });
 
 window.addEventListener('keypress',(e) =>{
     if (e.keyCode == 13){
         keyboard.ENTER= true;
+    }
+    if (e.keyCode == 68){
+        keyboard.D= true;
     }
 })
