@@ -12,6 +12,7 @@ class World {
     bottleBar = new BottleBar();
     throwableObjects = [];
     collisionFromAbove = false;
+    gameOver;
 
 
     constructor(canvas, keyboard) {
@@ -67,6 +68,30 @@ class World {
         setInterval(() => {
             this.hitEndBoss();    
         }, 650);
+        setInterval(() => {
+            this.checkWin(); 
+            this.checkLoss()
+         }, 500);
+    }
+
+    checkWin(){
+        if(this.level.endboss[0].energy == 0){
+            this.drawWinScreen();
+        }
+    }
+
+    checkLoss(){
+        if(this.character.energy == 0){
+            this.drawGameOver();
+        }
+    };
+
+    drawGameOver(){
+        
+    }
+
+    drawWinScreen(){
+        this.gameOver = new GameOver();
     }
 
     checkThrowObjects() {    
@@ -209,6 +234,7 @@ class World {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0)
+        this.addToMap(this.gameOver);
         this.addToMap(this.healthBar);
         this.addToMap(this.coinBar);
         this.addToMap(this.bottleBar);
@@ -231,10 +257,7 @@ class World {
         if (mo.otherDirection) {
             this.flipImage(mo)
         }
-
-        if(mo.energy == 0){
-           this.rotateImage(mo);
-        }
+        
 
         mo.draw(this.ctx); // mo steht stellvertretend für die Instanz object. Die Instanz moveableObject wird hier als mo durchgereicht.
         // mo.drawBorder(this.ctx);
@@ -243,10 +266,6 @@ class World {
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
-
-        if(mo.energy == 0){
-            this.rotateImageBack(mo);
-         }
 
     }
 
@@ -260,16 +279,5 @@ class World {
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();  // hier werden wieder die alten Eigenschaften vom Canvas angenommen
-    }
-
-    rotateImage(mo){
-        this.ctx.save();
-        ctx.translate(mo.x + mo.y, mo.y - mo.x);
-        this.ctx.rotate(90 * Math.PI / 180)   
-        ctx.translate(-(mo.x + mo.y), -(mo.y - mo.x));
-    }
-
-    rotateImageBack(mo){
-        this.ctx.restore();
     }
 }

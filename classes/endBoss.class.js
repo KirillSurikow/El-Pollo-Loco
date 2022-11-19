@@ -109,38 +109,37 @@ class Endboss extends moveableObject {
             }
         }, 50);
         setInterval(() => {
-            if (this.world.character.x < 1920 && i < 8) {
+            if (this.world.character.x < 1920 && i < 8 && this.energy > 0) {
                 this.playAnimation(this.walkingImages);
             }
         }, 200);
         setInterval(() => {
-            if (this.world.character.x > 1920 && i < 8) {
+            if (this.world.character.x > 1920 && i < 8 && this.energy > 0) {
                 this.playAnimation(this.alertImages);
                 i++;
             }
         }, 200);
         this.chickenBossMoving = setInterval(() => {
-            if (i >= 8) {
+            if (i >= 8 && this.energy > 0) {
 
                 this.moveLeft();
             }
         }, 1000 / 60);
         this.chickenBossWalking = setInterval(() => {
-            if (i >= 8 && k < 19 ) {
+            if (i >= 8 && k < 19 && this.energy > 0 ) {
                 this.playAnimation(this.walkingImages);
                 k++;
-                console.log('walking', k)
             }  
         }, 100);
         this.chickenBossAttacking = setInterval(() => {
-            if (i >= 8 && k >= 18 && k < 41  ) {
+            if (i >= 8 && k >= 18 && k < 41 && this.energy > 0 ) {
                 this.playAnimation(this.attackingImages);
                 k++;
-                console.log('attacking' , k)
+               
             }
             if (k == 41) {
                 k = 0;
-                console.log('again' , k)
+                
             }
         }, 50);
     }

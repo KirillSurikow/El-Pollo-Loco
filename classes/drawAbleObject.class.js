@@ -4,6 +4,7 @@ class DrawAbleObject{
     height = 150;
     width = 100;
     img;
+    otherDirection = false;
     imageCache = {};
     currentImage = 0;
 

@@ -10,7 +10,7 @@ function init(){
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard); // keyboard wird an die nächste Klasse world geschickt
    
-    console.log('My character is', world.character);
+    
 }
 
 window.addEventListener('keydown',(e) =>{  // es wird eine Abfrage gemacht , welche Taste gedrückt wird und mit den beiden Variablen keyboard und der Taste verknüft
@@ -33,7 +33,7 @@ window.addEventListener('keydown',(e) =>{  // es wird eine Abfrage gemacht , wel
         keyboard.D= true;
     }
     
-    console.log(e);
+
 });
 
 window.addEventListener('keyup',(e) =>{
