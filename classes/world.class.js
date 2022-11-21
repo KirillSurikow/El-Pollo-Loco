@@ -50,8 +50,8 @@ class World {
         this.level = initLevel();
         this.setWorld();
         this.draw();
-        this.checkCollisions();
         this.run();
+        // this.checkCollisions(); 
     }
 
     setWorld() {
@@ -77,7 +77,8 @@ class World {
 
     checkWin(){
         if(this.level.endboss[0].energy == 0){
-            this.drawWinScreen();
+            console.log('win')
+            // this.drawWinScreen();
         }
     }
 
@@ -113,16 +114,16 @@ class World {
     }
 
     collisionWithEnemies() {
-        try {
+        // try {
             this.level.enemies.forEach(enemy => {
                 if (this.character.isColliding(enemy) && this.collisionFromAbove == false && enemy.dead == false) {
                     this.character.hit();
                     this.healthBar.setPercentage(this.character.energy, this.healthBar.ImagesHealth)
                 }
             })   
-        } catch (error) {
-            console.log(this.enemy.dead)
-        }
+        // } catch (error) {
+        //     console.log(this.enemy.dead)
+        // }
         
     }
 
@@ -235,7 +236,7 @@ class World {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0)
-        this.addToMap(this.gameOver);
+        // this.addToMap(this.gameOver);
         // this.addToMap(this.loss);
         this.addToMap(this.healthBar);
         this.addToMap(this.coinBar);
