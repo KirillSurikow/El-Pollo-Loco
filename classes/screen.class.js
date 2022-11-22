@@ -4,6 +4,7 @@ class Screen extends DrawAbleObject{
     width = 720;
     height = 480;
     otherDirection = false;
+    img;
 
     constructor(){
         super();

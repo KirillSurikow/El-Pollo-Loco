@@ -78,7 +78,7 @@ class World {
     checkWin(){
         if(this.level.endboss[0].energy == 0){
             console.log('win')
-            // this.drawWinScreen();
+            this.drawWinScreen();
         }
     }
 
@@ -236,7 +236,7 @@ class World {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0)
-        // this.addToMap(this.gameOver);
+        this.addToMap(this.gameOver);
         // this.addToMap(this.loss);
         this.addToMap(this.healthBar);
         this.addToMap(this.coinBar);
@@ -256,9 +256,14 @@ class World {
     }
 
     addToMap(mo) {
+        try {
             if (mo.otherDirection) {
                 this.flipImage(mo)
             }
+        } catch (error) {
+            console.log(mo.otherDirection);
+        }
+           
             
     
             mo.draw(this.ctx); // mo steht stellvertretend für die Instanz object. Die Instanz moveableObject wird hier als mo durchgereicht.

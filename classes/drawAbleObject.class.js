@@ -23,8 +23,12 @@ class DrawAbleObject{
 
      
     draw(ctx) {
-      
-            ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+      try {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+      } catch (error) {
+        console.log(this.img);
+      }
+            
        
            /*drawImage ist eine vordefinierte Funktion. er erwartet an für img ein Bild*/
    

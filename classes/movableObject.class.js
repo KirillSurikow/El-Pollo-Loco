@@ -4,6 +4,12 @@ class moveableObject extends DrawAbleObject {
     acceleration = 2.5;
     energy = 100;
     lastHit = 0;
+    img;
+    
+
+    constructor(){
+        super();
+    }
 
     applyGravity() {
         setInterval(() => {
