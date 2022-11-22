@@ -8,6 +8,7 @@ class Endboss extends moveableObject {
     world;
     dead = false;
     lastAttack = 0;
+    intervalIDsEndboss = [];
     offset = {
         top: 0,
         bottom: 0,
@@ -94,7 +95,7 @@ class Endboss extends moveableObject {
         let i = 0;
         let j = 0;
         let k = 0;
-        setInterval(() => {
+       let interval1 = setInterval(() => {
             if (this.isHurt()) {
                 this.playAnimation(this.hurtImages);
             };
@@ -108,30 +109,30 @@ class Endboss extends moveableObject {
                 this.playAnimation(this.deadImage);
             }
         }, 50);
-        setInterval(() => {
+        let interval2 = setInterval(() => {
             if (this.world.character.x < 1920 && i < 8 && this.energy > 0) {
                 this.playAnimation(this.walkingImages);
             }
         }, 200);
-        setInterval(() => {
+        let interval3 = setInterval(() => {
             if (this.world.character.x > 1920 && i < 8 && this.energy > 0) {
                 this.playAnimation(this.alertImages);
                 i++;
             }
         }, 200);
-        this.chickenBossMoving = setInterval(() => {
+        let interval4 = setInterval(() => {
             if (i >= 8 && this.energy > 0) {
 
                 this.moveLeft();
             }
         }, 1000 / 60);
-        this.chickenBossWalking = setInterval(() => {
+        let interval5 = setInterval(() => {
             if (i >= 8 && k < 19 && this.energy > 0 ) {
                 this.playAnimation(this.walkingImages);
                 k++;
             }  
         }, 100);
-        this.chickenBossAttacking = setInterval(() => {
+        let interval6= setInterval(() => {
             if (i >= 8 && k >= 18 && k < 41 && this.energy > 0 ) {
                 this.playAnimation(this.attackingImages);
                 k++;
@@ -142,6 +143,7 @@ class Endboss extends moveableObject {
                 
             }
         }, 50);
+        this.intervalIDsEndboss.push(interval1, interval2, interval3, interval4, interval5, interval6);
     }
 }
 

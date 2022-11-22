@@ -3,9 +3,7 @@ class Chicken extends moveableObject {
     dead = false;
     height = 75;
     y = 350;
-    chickenMoving;
-    chickenWalking;
-    chickenDead;
+    intervalIDsChicken = [];
     offset = {
         top: 15,
         bottom: 0,
@@ -40,17 +38,17 @@ class Chicken extends moveableObject {
 
     animate() {
 
-      this.chickenMoving = setInterval(() => {
+      let chickenMoving = setInterval(() => {
             this.moveLeft();
         }, 1000 / 60);
-      this.chickenWalking = setInterval(() => {
+      let chickenWalking = setInterval(() => {
             this.playAnimation(this.walkingImages);
         }, 200)
-      this.chickenDead = setInterval(() => {
+      let chickenDead = setInterval(() => {
             if (this.dead == true) {
                 this.playAnimation(this.imageDead);
             }
         }, 200)
-
+        this.intervalIDsChicken.push(chickenMoving, chickenWalking, chickenDead)
     }
 }

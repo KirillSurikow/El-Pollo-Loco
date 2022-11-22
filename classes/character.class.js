@@ -2,6 +2,7 @@ class Character extends moveableObject {
     height = 250;
     y = 0;
     speed = 10;
+    intervalIDsCharacter = [];
     offset = {
         top: 110,
         bottom: 10,
@@ -67,27 +68,29 @@ class Character extends moveableObject {
 
     animate() {
         let i = 0;
-        setInterval(() => {
+       let interval1 = setInterval(() => {
             this.walking_sound.pause();
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.energy > 0) {
                 this.moveRight();
                 this.otherDirection = false;
                 this.walking_sound.play();
             }
+            
             if (this.world.keyboard.LEFT && this.x > 0 && this.energy > 0) {
                 this.moveLeft();
                 this.otherDirection = true;
                 this.walking_sound.play();
             }
-
+           
             if (this.world.keyboard.SPACE && !this.isAboveGround() && this.energy > 0) {
+                this.walking_sound.pause();
                 this.jump();
             }
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60)
 
 
-        setInterval(() => {
+        let interval2 = setInterval(() => {
             if (this.isHurt()) {
                 this.playAnimation(this.hurtImages);
             } else
@@ -99,12 +102,13 @@ class Character extends moveableObject {
                     }
                 }
         } , 50)
-        setInterval(() => {
+        let interval3 = setInterval(() => {
             if (this.isDead() && i < 7) {
                 this.playAnimation(this.deadImages);
                 i++;
             }
         }, 200);
+        this.intervalIDsCharacter.push(interval1, interval2, interval3)
     }
 
 

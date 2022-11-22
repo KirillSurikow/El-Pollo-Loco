@@ -1,16 +1,20 @@
 let canvas;
 let ctx;
 let keyboard = new Keyboard();  // es entsteht eine Variable keyboard, die aus der Klasse Keyboard entspringt
-
+let world;
 
 
 
 function init(){
 
     canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard); // keyboard wird an die nächste Klasse world geschickt
-   
-    
+    world = new World(canvas, keyboard); // keyboard wird an die nächste Klasse world geschickt 
+}
+
+function restartGame(){
+   if(this.world.gameIsFinished == true){
+    console.log('restart');
+   }
 }
 
 window.addEventListener('keydown',(e) =>{  // es wird eine Abfrage gemacht , welche Taste gedrückt wird und mit den beiden Variablen keyboard und der Taste verknüft
