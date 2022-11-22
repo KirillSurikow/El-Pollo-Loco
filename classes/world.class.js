@@ -16,6 +16,14 @@ class World {
     loss = new Loss();
     intervalIDsWorld = [];
     gameIsFinished = false;
+    pain_sound = new Audio('audio/pain.mp3');
+    chickenSmall_sound = new Audio('audio/chickenSmall.mp3');
+    collectBottle_sound = new Audio('audio/bottle.mp3');
+    collectCoin_sound = new Audio('audio/coin.mp3');
+    theme_sound = new Audio('audio/theme.mp3');
+    win_sound = new Audio('audio/win.mp3');
+    loss_sound = new Audio('audio/loss.mp3');
+    
 
 
     constructor(canvas, keyboard) {
@@ -77,11 +85,20 @@ class World {
         let interval3 = setInterval(() => {
             this.hitEndBoss();
         }, 650);
-        this.intervalIDsWorld.push(interval1, interval2, interval3)
+        let interval4 = setInterval(() => {
+            if(this.gameIsRunning = true)
+            this.theme_sound.play();
+        }, 20);
+        this.intervalIDsWorld.push(interval1, interval2, interval3, interval4)
+        
     }
 
     drawLossScreen() {
         if (this.character.energy == 0) {
+            this.theme_sound.pause(); 
+            setTimeout(() => {
+                this.loss_sound.play();
+            }, 1000);
             this.addToMap(this.loss);
             this.prepareRestart()
         }
@@ -94,29 +111,36 @@ class World {
             this.resetIntervals();
             this.resetVariables();
             init();
-        }, 4000);
+        }, 7000);
     }
 
-    resetIntervals(){
+    resetIntervals() {
         this.intervalIDsWorld.forEach(clearInterval);
         this.character.intervalIDsCharacter.forEach(clearInterval);
         this.level.endboss.intervalIDsEndboss.forEach(clearInterval);
         this.level.enemies.intervalIDsChicken.forEach(clearInterval);
     }
 
-    resetVariables(){
+    resetVariables() {
         this.character.x = 120;
         this.character.energy = 100;
         this.endboss.energy = 100;
+        this.character.bottles = 0;
+        this.character.coins = 0;
         this.endboss.x = 2500;
+        this.throwableObjects = [];
+        this.level = level1;
     }
 
     drawWinScreen() {
         if (this.level.endboss[0].energy == 0) {
             this.addToMap(this.gameOver);
+            this.theme_sound.pause(); 
             this.prepareRestart();
+            setTimeout(() => {
+                this.win_sound.play();
+            }, 1000);
         }
-
     }
 
     checkThrowObjects() {
@@ -142,6 +166,7 @@ class World {
             if (this.character.isColliding(enemy) && this.collisionFromAbove == false && enemy.dead == false) {
                 this.character.hit();
                 this.healthBar.setPercentage(this.character.energy, this.healthBar.ImagesHealth)
+                this.pain_sound.play();
             }
         })
         // } catch (error) {
@@ -153,8 +178,9 @@ class World {
     collisionWithCoins() {
         this.level.coins.forEach(coin => {
             if (this.character.isColliding(coin)) {
-                this.removeCoin(coin.id)
-                this.character.coins++
+                this.collectCoin_sound.play();
+                this.removeCoin(coin.id);
+                this.character.coins++;
                 this.updateCoinBar();
             }
         })
@@ -180,6 +206,7 @@ class World {
                 this.removeBottle(bottle.id)
                 this.character.bottles++
                 this.updateBottleBar();
+                this.collectBottle_sound.play()
             }
         })
     }
@@ -202,6 +229,7 @@ class World {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
                 if (bottle.isColliding(enemy)) {
+                    this.chickenSmall_sound.play();
                     this.showDeadChicken(enemy)
                 }
             });
@@ -233,6 +261,7 @@ class World {
             if (this.character.isJLandingOn(enemy)) {
                 this.collisionFromAbove = true;
                 this.showDeadChicken(enemy);
+                this.chickenSmall_sound.play();
                 setTimeout(() => {
                     this.collisionFromAbove = false;
                 }, 500);

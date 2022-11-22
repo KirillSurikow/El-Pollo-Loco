@@ -4,6 +4,7 @@ class Chicken extends moveableObject {
     height = 75;
     y = 350;
     intervalIDsChicken = [];
+    chickenMoving;
     offset = {
         top: 15,
         bottom: 0,
@@ -38,7 +39,7 @@ class Chicken extends moveableObject {
 
     animate() {
 
-      let chickenMoving = setInterval(() => {
+      this.chickenMoving = setInterval(() => {
             this.moveLeft();
         }, 1000 / 60);
       let chickenWalking = setInterval(() => {
@@ -49,6 +50,6 @@ class Chicken extends moveableObject {
                 this.playAnimation(this.imageDead);
             }
         }, 200)
-        this.intervalIDsChicken.push(chickenMoving, chickenWalking, chickenDead)
+        this.intervalIDsChicken.push(this.chickenMoving, chickenWalking, chickenDead)
     }
 }

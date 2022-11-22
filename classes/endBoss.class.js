@@ -9,6 +9,8 @@ class Endboss extends moveableObject {
     dead = false;
     lastAttack = 0;
     intervalIDsEndboss = [];
+    alertSound = new Audio('audio/chickenBig.mp3');
+    hurtSound = new Audio('audio/chickenSmall.mp3')
     offset = {
         top: 0,
         bottom: 0,
@@ -98,6 +100,7 @@ class Endboss extends moveableObject {
        let interval1 = setInterval(() => {
             if (this.isHurt()) {
                 this.playAnimation(this.hurtImages);
+                this.hurtSound.play();
             };
             if (this.isDead() && j <= 2) {
                 this.playAnimation(this.deadImages);
@@ -117,6 +120,7 @@ class Endboss extends moveableObject {
         let interval3 = setInterval(() => {
             if (this.world.character.x > 1920 && i < 8 && this.energy > 0) {
                 this.playAnimation(this.alertImages);
+                this.alertSound.play();
                 i++;
             }
         }, 200);
