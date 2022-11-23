@@ -2,7 +2,7 @@ class Endboss extends moveableObject {
     height = 400;
     width = 250;
     y = 55;
-    x = 2500;
+    x = 4600;
     contactWithCharacter = false;
     firstContact = false;
     world;
@@ -113,12 +113,12 @@ class Endboss extends moveableObject {
             }
         }, 50);
         let interval2 = setInterval(() => {
-            if (this.world.character.x < 1920 && i < 8 && this.energy > 0) {
+            if (this.world.character.x < 4020 && i < 8 && this.energy > 0) {
                 this.playAnimation(this.walkingImages);
             }
         }, 200);
         let interval3 = setInterval(() => {
-            if (this.world.character.x > 1920 && i < 8 && this.energy > 0) {
+            if (this.world.character.x > 4020 && i < 8 && this.energy > 0) {
                 this.playAnimation(this.alertImages);
                 this.alertSound.play();
                 i++;

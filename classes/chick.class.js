@@ -1,8 +1,8 @@
-class Chicken extends moveableObject {
+class Chick extends moveableObject{
     id;
     dead = false;
-    height = 75;
-    y = 350;
+    height = 50;
+    y = 370;
     intervalIDsChicken = [];
     chickenMoving;
     offset = {
@@ -13,18 +13,18 @@ class Chicken extends moveableObject {
     }
 
     landZone = {
-        top : -10,
-        bottom : 60,
+        top : 0,
+        bottom : 40,
         left : 0,
         right : 0
     };
     walkingImages = [
-        'img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
-        'img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
-        'img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
+        'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
+        'img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
+        'img/3_enemies_chicken/chicken_small/1_walk/3_w.png'
     ];
 
-    imageDead = ['img/3_enemies_chicken/chicken_normal/2_dead/dead.png'];
+    imageDead = ['img/3_enemies_chicken/chicken_small/2_dead/dead.png'];
 
     constructor(id) {
         super();

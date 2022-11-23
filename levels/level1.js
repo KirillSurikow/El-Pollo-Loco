@@ -13,11 +13,27 @@ function initLevel() {
             new Chicken(7),
             new Chicken(8),
             new Chicken(9),
+            new Chick(10),
+            new Chick(11),
+            new Chick(12),
+            new Chick(13),
+            new Chick(14),
+            new Chick(15),
+            new Chick(16),
+            new Chick(17),
+            new Chick(18),
+            new Chick(19),
         ],
         [
             new Endboss()
         ],
         [
+            new Cloud(),
+            new Cloud(),
+            new Cloud(),
+            new Cloud(),
+            new Cloud(),
+            new Cloud(),
             new Cloud()
         ],
         [
@@ -45,6 +61,22 @@ function initLevel() {
             new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 719 * 3),
             new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 719 * 3),
             new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 719 * 3),
+
+            new BackgroundObject('img/5_background/layers/air.png', 719 * 4),
+            new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 719 * 4),
+            new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 719 * 4),
+            new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 719 * 4),
+
+
+            new BackgroundObject('img/5_background/layers/air.png', 719 * 5),
+            new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 719 * 5),
+            new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 719 * 5),
+            new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 719 * 5),
+
+            new BackgroundObject('img/5_background/layers/air.png', 719 * 6),
+            new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 719 * 6),
+            new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 719 * 6),
+            new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 719 * 6),
 
         ],
         [

@@ -67,6 +67,15 @@ class Character extends moveableObject {
         this.applyGravity();
     };
 
+    hitByEndboss() {
+        this.energy -= 10;
+        if (this.energy <= 0) {
+            this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime();
+        }
+    }
+
     animate() {
         let i = 0;
        let interval1 = setInterval(() => {
