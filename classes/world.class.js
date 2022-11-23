@@ -87,10 +87,10 @@ class World {
             this.hitEndBoss();
         }, 650);
         let interval4 = setInterval(() => {
-            if (this.gameIsRunning == true && this.theme_sound)
+            if (this.gameIsRunning == true )
                 this.theme_sound.play();
-                this.theme_sound.loop = true;
-                this.theme_sound.volume = 0.5;
+            this.theme_sound.loop = true;
+            this.theme_sound.volume = 0.25;
         }, 20);
         this.intervalIDsWorld.push(interval1, interval2, interval3, interval4)
 
@@ -99,7 +99,7 @@ class World {
     drawLossScreen() {
         if (this.character.energy == 0) {
             setTimeout(() => {
-                this.stopGame();  
+                this.stopGame();
             }, 500);
             setTimeout(() => {
                 this.loss_sound.play();
@@ -130,7 +130,13 @@ class World {
         this.character.intervalIDsCharacter.forEach(clearInterval);
         this.level.endboss[0].intervalIDsEndboss.forEach(clearInterval);
         this.clearIntervalChickens();
+        this.resetRemainingIntervals();
     }
+
+    resetRemainingIntervals() {
+            clearInterval(83);
+    }
+
 
     clearIntervalChickens() {
         for (let i = 0; i < this.level.enemies.length; i++) {
@@ -166,9 +172,9 @@ class World {
     drawWinScreen() {
         if (this.level.endboss[0].energy == 0) {
             setTimeout(() => {
-                this.stopGame();  
+                this.stopGame();
             }, 500);
-            
+
             // this.theme_sound.pause();
             setTimeout(() => {
                 this.win_sound.play();

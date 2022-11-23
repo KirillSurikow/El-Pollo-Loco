@@ -1,14 +1,25 @@
+@font-face {
+    font-family: 'tanomuze';
+    src: url('fonts/tanomuzeCowboy-vmm6D.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}  
+
 body{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('img/9_intro_outro_screens/start/startscreen_2.png');
-    background-position: 100px;
+    background-image: url('img/9_intro_outro_screens/start/desert.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover ;
+    font-family: 'tanomuze', Arial, Helvetica, sans-serif;
+    font-size: 36px;
+    text-shadow: 4px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
 canvas{
     background-color: black;
+    display: block;
 }
 
 .controls{
@@ -21,4 +32,32 @@ canvas{
 
 .controls div{
     background-color: rgba(218, 218, 29,0.6);
+}
+
+/* Smartphones */
+
+@media only screen and (max-with: 720px){
+    canvas{
+        width: 100%;
+    }
+}
+
+@media only screen and (max-height: 740px){
+    h1{
+        display: none;
+    }
+
+    .controls div{
+        display: none;
+    }
+}
+
+@media only screen and (max-height: 480px){
+    canvas{
+        height: 100vh;
+    }
+
+    h1{
+        display: none;
+    }
 }
