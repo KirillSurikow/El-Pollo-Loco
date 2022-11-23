@@ -23,7 +23,7 @@ class World {
     theme_sound = new Audio('audio/theme.mp3');
     win_sound = new Audio('audio/win.mp3');
     loss_sound = new Audio('audio/loss.mp3');
-   
+
 
 
 
@@ -89,7 +89,8 @@ class World {
         let interval4 = setInterval(() => {
             if (this.gameIsRunning == true && this.theme_sound)
                 this.theme_sound.play();
-                // this.theme_sound.loop = true;
+                this.theme_sound.loop = true;
+                this.theme_sound.volume = 0.5;
         }, 20);
         this.intervalIDsWorld.push(interval1, interval2, interval3, interval4)
 
@@ -97,28 +98,35 @@ class World {
 
     drawLossScreen() {
         if (this.character.energy == 0) {
-            this.theme_sound.pause();
+            setTimeout(() => {
+                this.stopGame();  
+            }, 500);
             setTimeout(() => {
                 this.loss_sound.play();
             }, 1000);
             this.addToMap(this.loss);
-            this.prepareRestart()
+            this.prepareRestart();
         }
     };
+
+    stopGame() {
+        this.gameIsFinished = true;
+        this.gameIsRunning = false;
+        this.resetIntervals();
+        this.pauseSounds();
+    }
 
     prepareRestart() {
         setTimeout(() => {
             this.drawStartScreen();
-            this.gameIsFinished = true;
-            this.resetIntervals();
             this.resetVariables();
-            this.pauseSounds();
             init();
         }, 7000);
     }
 
     resetIntervals() {
         this.intervalIDsWorld.forEach(clearInterval);
+        console.log(this.intervalIDsWorld[3]);
         this.character.intervalIDsCharacter.forEach(clearInterval);
         this.level.endboss[0].intervalIDsEndboss.forEach(clearInterval);
         this.clearIntervalChickens();
@@ -143,24 +151,30 @@ class World {
     }
 
     pauseSounds() {
-        this.pain_sound = '';
-        this.chickenSmall_sound = '';
-        this.collectBottle_sound = '';
-        this.collectCoin_sound = '';
-        this.theme_sound = '';
-        this.win_sound = '';
-        this.loss_sound = '';
+        // this.pain_sound = '';
+        // this.chickenSmall_sound = '';
+        // this.collectBottle_sound = '';
+        // this.collectCoin_sound = '';
+        // this.theme_sound = '';
+        setInterval(() => {
+            this.win_sound.pause();
+            this.loss_sound.pause();
+        }, 7000);
 
     }
 
     drawWinScreen() {
         if (this.level.endboss[0].energy == 0) {
-            this.addToMap(this.gameOver);
-            this.theme_sound = '';
-            this.prepareRestart();
+            setTimeout(() => {
+                this.stopGame();  
+            }, 500);
+            
+            // this.theme_sound.pause();
             setTimeout(() => {
                 this.win_sound.play();
             }, 1000);
+            this.addToMap(this.gameOver);
+            this.prepareRestart();
         }
     }
 
@@ -176,15 +190,17 @@ class World {
         }
     }
 
-    removeThrownBottle(id){
+    removeThrownBottle(id) {
         setTimeout(() => {
             console.log(id);
             for (let i = 0; i < this.throwableObjects.length; i++) {
                 let bottleID = this.throwableObjects[i].id;
                 if (bottleID == id) {
+                    clearInterval(this.throwableObjects[i].splashSound);
+                    console.log(this.throwableObjects[i].splashSound);
                     this.throwableObjects.splice(i, 1);
                 }
-            }   
+            }
         }, 1500);
     }
 
