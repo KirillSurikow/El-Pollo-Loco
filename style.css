@@ -11,7 +11,8 @@ body{
     background-image: url('img/9_intro_outro_screens/start/desert.png');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover ;
+    background-attachment: fixed;
+    background-size:cover ;
     font-family: 'tanomuze', Arial, Helvetica, sans-serif;
     font-size: 36px;
     text-shadow: 4px 2px 3px rgba(0, 0, 0, 0.5);
@@ -34,9 +35,57 @@ canvas{
     background-color: rgba(218, 218, 29,0.6);
 }
 
+/* screen*/
+
+.screen{
+   position: relative;
+   max-width: 720px;
+}
+
+.responsiveNav{
+   position: absolute;
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   bottom: 9px;
+}
+
+.navSection{
+   display: flex;
+   gap: 15px;
+}
+
+.navBtn{
+    background-color: rgba(218, 218, 29,0.6);
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow{
+
+}
+
+.jump{
+
+}
+
+.salsaBtn{
+
+}
+
+
 /* Smartphones */
 
 @media only screen and (max-with: 720px){
+   .screen{
+    width: 100%;
+   }
+
     canvas{
         width: 100%;
     }

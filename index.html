@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -33,16 +34,39 @@
     <script src="js/game.js"></script>
     <title>El Pollo Loco</title>
 </head>
-<body onload="init()">
-    
-    <h1>El Pollo Loco</h1>
 
-    <canvas id="canvas" height="480px" width="720px"></canvas>
+<body onload="init()">
+
+    <h1>El Pollo Loco</h1>
+    <div id="fullScreen" class="screen">
+        <canvas id="canvas" height="480px" width="720px"></canvas>
+        <div class="responsiveNav" id="responsiveNav">
+            <div class="navSection">
+                <button class="navBtn" id="leftBtn">
+                    <img class="arrow" src="img/navigation/left-arrow.png" alt="">
+                </button>
+                <button class="navBtn" id="rightBtn">
+                    <img class="arrow" src="img/navigation/right-arrow.png" alt="">
+                </button>
+            </div>
+            <div class="navSection">
+                <button class="navBtn" id="jumpBtn">
+                    <img class="jump" src="img/navigation/jump.png">
+                </button>
+                <button class="navBtn" id="bottleBtn">
+                    <img class="salsaBtn" src="img/navigation/wine-bottle.png">
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="controls">
         <div>Arrows Left/Right = Walk</div>
         <div>Space = Jump</div>
         <div>D = Throw Bottle</div>
+        <div onclick="initFullScreen('fullScreen')">fullScreen</div>
     </div>
 
 </body>
+
 </html>

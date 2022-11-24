@@ -1,5 +1,7 @@
 class World {
     gameIsRunning = false;
+    startScreen;
+    game;
     start;
     character;
     level = level1;
@@ -15,7 +17,6 @@ class World {
     gameOver = new GameOver();
     loss = new Loss();
     intervalIDsWorld = [];
-    gameIsFinished = false;
     pain_sound = new Audio('audio/pain.mp3');
     chickenSmall_sound = new Audio('audio/chickenSmall.mp3');
     collectBottle_sound = new Audio('audio/bottle.mp3');
@@ -39,43 +40,111 @@ class World {
                 this.initGame();
             }
         })
-        // this.checkPlaying();
-        // this.draw();
-        // this.setWorld();
-        // this.checkCollisions();
-        // this.run()
     }
 
+
+    /**
+     * start screen is drawn
+     * 
+     */
     drawStartScreen() {
+        cancelAnimationFrame(this.game);
         this.addToMap(this.start);
         let self = this;
-        requestAnimationFrame(function () {
+        this.startScreen = requestAnimationFrame(function () {
             self.drawStartScreen()
         });
     }
 
 
-
+    /**
+     * the game starts after clicking
+     * 
+     */
     initGame() {
         if (this.gameIsRunning == true) {
+            cancelAnimationFrame(this.startScreen);
             this.character = new Character();
             this.level = initLevel();
             this.setWorld();
             this.run();
             this.draw();
+            this.endOfGame();
         }
-
-
-        // this.checkCollisions();
     }
 
+    endOfGame() {
+        this.pauseThemeSound();
+        this.startEndSounds();
+        this.prepareRestart();
+        this.stopIntervals();
+    }
+
+    stopIntervals() {
+        let intervalsStopped = false;
+        let interval5 = setInterval(() => {
+            if (this.character.energy == 0 && intervalsStopped == false || this.level.endboss[0].energy == 0 && intervalsStopped == false) {
+                this.resetIntervals();
+                intervalsStopped = true;
+            }
+        }, 500);
+        this.intervalIDsWorld.push(interval5);
+    }
+
+    pauseThemeSound() {
+        let paused = false;
+        let interval6 = setInterval(() => {
+            if (this.character.energy == 0 && paused == false) {
+                this.theme_sound.pause();
+                paused = true;
+            }
+            if (this.level.endboss[0].energy == 0 && paused == false) {
+                this.theme_sound.pause();
+                paused = true;
+            }
+        }, 500);
+        this.intervalIDsWorld.push(interval6);
+    }
+
+    startEndSounds() {
+        let playedFirstTime = true;
+        let interval7 = setInterval(() => {
+            if (this.character.energy == 0 && playedFirstTime == true) {
+                this.loss_sound.play();
+                playedFirstTime = false;
+                setTimeout(() => {
+                    this.loss_sound.pause();
+                }, 7000);
+            }
+        }, 500);
+        let interval8 = setInterval(() => {
+            if (this.level.endboss[0].energy == 0 && playedFirstTime == true) {
+                this.win_sound.play();
+                playedFirstTime = false;
+                setTimeout(() => {
+                    this.win_sound.pause();
+                }, 7000);
+            }
+        }, 500);
+        this.intervalIDsWorld.push(interval7, interval8);
+    }
+
+    /**
+     * Passing the world as whole to the class character
+     * 
+     */
     setWorld() {
         this.character.world = this;  // setWorld übergibt die komplette Instanz World an die Variable World in der Klasse character
     }
 
-
-
+    /**
+     * all intervals running in the world class
+     * 
+     */
     run() {
+        this.theme_sound.play();
+        this.theme_sound.loop = true;
+        this.theme_sound.volume = 0.25;
         let interval1 = setInterval(() => {
             this.checkCollisions();
             this.checkContactWithEndBoss();
@@ -86,56 +155,69 @@ class World {
         let interval3 = setInterval(() => {
             this.hitEndBoss();
         }, 650);
-        let interval4 = setInterval(() => {
-            if (this.gameIsRunning == true )
-                this.theme_sound.play();
-            this.theme_sound.loop = true;
-            this.theme_sound.volume = 0.25;
-        }, 20);
-        this.intervalIDsWorld.push(interval1, interval2, interval3, interval4)
+        this.intervalIDsWorld.push(interval1, interval2, interval3)
 
     }
 
+
+    /**
+     * drawing the loss screen 
+     * 
+     */
     drawLossScreen() {
         if (this.character.energy == 0) {
-            setTimeout(() => {
-                this.stopGame();
-            }, 500);
-            setTimeout(() => {
-                this.loss_sound.play();
-            }, 1000);
             this.addToMap(this.loss);
-            this.prepareRestart();
         }
     };
 
-    stopGame() {
-        this.gameIsFinished = true;
-        this.gameIsRunning = false;
-        this.resetIntervals();
-        this.pauseSounds();
+    drawWinScreen() {
+        if (this.level.endboss[0].energy == 0) {
+            this.addToMap(this.gameOver);
+        }
     }
 
+
+
+    /**
+     * go back to start screen and reset the game
+     * 
+     */
     prepareRestart() {
-        setTimeout(() => {
-            this.drawStartScreen();
-            this.resetVariables();
-            init();
-        }, 7000);
+        let restart = false;
+        setInterval(() => {
+            if (this.character.energy == 0 && restart == false || this.level.endboss[0].energy == 0 && restart == false) {
+                restart = true;
+                setTimeout(() => {
+                    this.drawStartScreen();
+                    this.resetVariables();
+                    init();
+                    this.gameIsRunning = false;
+                }, 7000);
+            }
+        }, 500);
     }
 
+    /**
+     * clearing all intervals of the game
+     * 
+     */
     resetIntervals() {
         this.intervalIDsWorld.forEach(clearInterval);
-        console.log(this.intervalIDsWorld[3]);
         this.character.intervalIDsCharacter.forEach(clearInterval);
         this.level.endboss[0].intervalIDsEndboss.forEach(clearInterval);
         this.clearIntervalChickens();
         this.resetRemainingIntervals();
+       
+            for(let i = 0; i < 999; i++){
+                clearInterval(i);
+            }
+                
+        
     }
 
-    resetRemainingIntervals() {
-            clearInterval(83);
-    }
+    // resetRemainingIntervals() {
+    //     clearInterval(83);
+    // }
 
 
     clearIntervalChickens() {
@@ -153,37 +235,22 @@ class World {
         this.character.coins = 0;
         this.level.endboss.x = 2500;
         this.throwableObjects = [];
-        this.level = level1;
+        this.level = '';
     }
 
-    pauseSounds() {
-        // this.pain_sound = '';
-        // this.chickenSmall_sound = '';
-        // this.collectBottle_sound = '';
-        // this.collectCoin_sound = '';
-        // this.theme_sound = '';
-        setInterval(() => {
-            this.win_sound.pause();
-            this.loss_sound.pause();
-        }, 7000);
+    // pauseSounds() {
+    //     setInterval(() => {
+    //         this.win_sound.pause();
+    //         this.loss_sound.pause();
+    //     }, 7000);
 
-    }
+    // }
 
-    drawWinScreen() {
-        if (this.level.endboss[0].energy == 0) {
-            setTimeout(() => {
-                this.stopGame();
-            }, 500);
 
-            // this.theme_sound.pause();
-            setTimeout(() => {
-                this.win_sound.play();
-            }, 1000);
-            this.addToMap(this.gameOver);
-            this.prepareRestart();
-        }
-    }
-
+    /**
+     * central function for throwing objects
+     * 
+     */
     checkThrowObjects() {
         let id = 0;
         if (this.keyboard.D && this.character.bottles > 0 && this.character.energy > 0) {
@@ -357,7 +424,7 @@ class World {
         this.ctx.translate(this.camera_x, 0)
         this.ctx.translate(-this.camera_x, 0)
         let self = this;
-        requestAnimationFrame(function () {
+        this.game = requestAnimationFrame(function () {
             self.draw()
         });
     }
