@@ -1,4 +1,4 @@
-class Chick extends moveableObject{
+class Chick extends moveableObject {
     id;
     dead = false;
     height = 50;
@@ -13,10 +13,10 @@ class Chick extends moveableObject{
     }
 
     landZone = {
-        top : 0,
-        bottom : 40,
-        left : 0,
-        right : 0
+        top: 0,
+        bottom: 40,
+        left: 0,
+        right: 0
     };
     walkingImages = [
         'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
@@ -34,18 +34,21 @@ class Chick extends moveableObject{
         this.x = 730 + Math.random() * 4000;
         this.loadImages(this.imageDead);
         this.speed = 0.15 + Math.random() * 0.5;
+        this.applyGravity();
         this.animate();
     };
 
     animate() {
-
-      this.chickenMoving = setInterval(() => {
+        this.chickJumping = setInterval(() => {
+            this.jump();
+        }, 3000);
+        this.chickenMoving = setInterval(() => {
             this.moveLeft();
         }, 1000 / 60);
-      let chickenWalking = setInterval(() => {
+        let chickenWalking = setInterval(() => {
             this.playAnimation(this.walkingImages);
         }, 200)
-      let chickenDead = setInterval(() => {
+        let chickenDead = setInterval(() => {
             if (this.dead == true) {
                 this.playAnimation(this.imageDead);
             }

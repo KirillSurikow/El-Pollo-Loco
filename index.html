@@ -39,34 +39,66 @@
 
     <h1>El Pollo Loco</h1>
 
-    <div id="fullScreen" class="screen">
-        <canvas id="canvas" height="480px" width="720px"></canvas>
-        <div class="responsiveNav" id="responsiveNav">
-            <div class="navSection">
-                <button class="navBtn" id="leftBtn">
-                    <img class="arrow" src="img/navigation/left-arrow.png" alt="">
-                </button>
-                <button class="navBtn" id="rightBtn">
-                    <img class="arrow" src="img/navigation/right-arrow.png" alt="">
-                </button>
+    <div class="content">
+        <div class="controls">
+            <div>Arrows Left/Right = Walk</div>
+            <div>Space = Jump</div>
+            <div>D = Throw Bottle</div>
+            <div onclick="initFullScreen('fullScreen')">fullScreen</div>
+        </div>
+
+        <div id="fullScreen" class="screen">
+            <div class="responsiveHeadNav" id="responsiveHeadNav">
+                <div class="navSection">
+                    <button class="navBtn" id="mute">
+                        <img src="img/navigation/volume-mute.png">
+                    </button>
+                    <button class="navBtn" id="fullscreenBtn">
+                        <img src="img/navigation/fullscreen.png">
+                    </button>
+                </div>
             </div>
-            <div class="navSection">
-                <button class="navBtn" id="jumpBtn">
-                    <img class="jump" src="img/navigation/jump.png">
-                </button>
-                <button class="navBtn" id="bottleBtn">
-                    <img class="salsaBtn" src="img/navigation/wine-bottle.png">
-                </button>
+            <canvas id="canvas" height="480px" width="720px"></canvas>
+            <div class="responsiveNav" id="responsiveNav">
+                <div class="navSection">
+                    <button class="navBtn" id="leftBtn">
+                        <img class="arrow" src="img/navigation/left-arrow.png" alt="">
+                    </button>
+                    <button class="navBtn" id="rightBtn">
+                        <img class="arrow" src="img/navigation/right-arrow.png" alt="">
+                    </button>
+                </div>
+                <div class="navSection">
+                    <button class="navBtn" id="jumpBtn">
+                        <img class="jump" src="img/navigation/jump.png">
+                    </button>
+                    <button class="navBtn" id="bottleBtn">
+                        <img class="salsaBtn" src="img/navigation/wine-bottle.png">
+                    </button>
+                </div>
             </div>
         </div>
+
+        <div>
+            <div>
+                Avoid colliding with the chickens.
+            </div>
+            <div>
+                Defeat the chicks and chickens by throwing bottles on them.
+            </div>
+            <div>
+                Or by jumping on their heads.
+            </div>
+            <div>
+                Defeat the endboss by throwing multiple bottles on him.
+            </div>
+        </div>
+
     </div>
 
-    <div class="controls">
-        <div>Arrows Left/Right = Walk</div>
-        <div>Space = Jump</div>
-        <div>D = Throw Bottle</div>
-        <div onclick="initFullScreen('fullScreen')">fullScreen</div>
-    </div>
+
+
+
 
 </body>
 

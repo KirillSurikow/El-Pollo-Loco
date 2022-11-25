@@ -66,6 +66,7 @@ function bindKeyPressEvents() {
         if (e.keyCode == 68) {
             keyboard.D = true;
         }
+
     });
 
     window.addEventListener('keyup', (e) => {
@@ -104,11 +105,11 @@ function bindBtsPressEvents() {
     });
     document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
         e.preventDefault();
-        keyboard.Right = true;
+        keyboard.RIGHT = true;
     });
     document.getElementById('jumpBtn').addEventListener('touchstart', (e) => {
         e.preventDefault();
-        keyboard.UP = true;
+        keyboard.SPACE = true;
     });
     document.getElementById('bottleBtn').addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -121,11 +122,11 @@ function bindBtsPressEvents() {
     });
     document.getElementById('rightBtn').addEventListener('touchend', (e) => {
         e.preventDefault();
-        keyboard.Right = false
+        keyboard.RIGHT = false
     });
     document.getElementById('jumpBtn').addEventListener('touchend', (e) => {
         e.preventDefault();
-        keyboard.UP = false;
+        keyboard.SPACE = false;
     });
     document.getElementById('bottleBtn').addEventListener('touchend', (e) => {
         e.preventDefault();

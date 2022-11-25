@@ -55,8 +55,7 @@ class Character extends moveableObject {
         'img/2_character_pepe/4_hurt/H-43.png'
     ]
     world;  // character nimmt hier die Instanz World auf und kann somit auf die Variablen der world zugreifen wie z.B. keyboard
-    walking_sound = new Audio('audio/walking.mp3');
-    jumping_sound = new Audio('audio/jump.mp3')
+    
     constructor() {
         super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
         this.loadImages(this.walkingImages);          /* Befehl wird an die superklasse weitergegeben*/
@@ -79,23 +78,23 @@ class Character extends moveableObject {
     animate() {
         let i = 0;
        let interval1 = setInterval(() => {
-            this.walking_sound.pause();
+            this.world.walking_sound.pause();
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.energy > 0) {
                 console.log(this.world.keyboard.RIGHT)
                 this.moveRight();
                 this.otherDirection = false;
-                this.walking_sound.play();
+                this.world.walking_sound.play()
             }
             
             if (this.world.keyboard.LEFT && this.x > 0 && this.energy > 0) {
                 this.moveLeft();
                 this.otherDirection = true;
-                this.walking_sound.play();
+                this.world.walking_sound.play();
             }
            
             if (this.world.keyboard.SPACE && !this.isAboveGround() && this.energy > 0) {
-                this.walking_sound.pause();
-                this.jumping_sound.play();
+                this.world.walking_sound.pause();
+                this.world.jumping_sound.play();
                 this.jump();
             }
             this.world.camera_x = -this.x + 100;

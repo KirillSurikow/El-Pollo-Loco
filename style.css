@@ -18,6 +18,10 @@ body{
     text-shadow: 4px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
+.content{
+    display: flex;
+}
+
 canvas{
     background-color: black;
     display: block;
@@ -25,7 +29,7 @@ canvas{
 
 .controls{
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     color: rgb(205, 22, 22);
     gap: 20px;
     font-size: 36px;
@@ -49,6 +53,15 @@ canvas{
    align-items: center;
    justify-content: space-between;
    bottom: 9px;
+}
+
+.responsiveHeadNav{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    top: 9px;
 }
 
 .navSection{

@@ -24,6 +24,9 @@ class World {
     theme_sound = new Audio('audio/theme.mp3');
     win_sound = new Audio('audio/win.mp3');
     loss_sound = new Audio('audio/loss.mp3');
+    walking_sound = new Audio('audio/walking.mp3');
+    jumping_sound = new Audio('audio/jump.mp3');
+    muted = false;
 
 
 
@@ -38,6 +41,31 @@ class World {
             if (e.keyCode == 13 && this.gameIsRunning == false) {
                 this.gameIsRunning = true;
                 this.initGame();
+            }
+            if (e.keyCode == 70 && this.muted == false ) {
+                console.log('mute');
+                this.pain_sound.volume = 0;
+                this.chickenSmall_sound.volume = 0;
+                this.collectBottle_sound.volume = 0;
+                this.collectCoin_sound.volume = 0;
+                this.theme_sound.volume = 0;
+                this.win_sound.volume = 0;
+                this.loss_sound.volume = 0;
+                this.walking_sound.volume = 0;
+                this.jumping_sound.volume = 0;
+                this.muted = true;
+            }
+            if (e.keyCode == 70 && this.muted == true) {
+                this.pain_sound.volume = 1;
+                this.chickenSmall_sound.volume = 1;
+                this.collectBottle_sound.volume = 1;
+                this.collectCoin_sound.volume = 1;
+                this.theme_sound.volume = 0.25;
+                this.win_sound.volume = 1;
+                this.loss_sound.volume = 1;
+                this.walking_sound.volume = 1;
+                this.jumping_sound.volume = 1;
+                this.muted = false;
             }
         })
     }
@@ -68,9 +96,18 @@ class World {
             this.level = initLevel();
             this.setWorld();
             this.run();
+            this.shallMute();
             this.draw();
             this.endOfGame();
         }
+    }
+
+    shallMute(){
+        setInterval(() => {
+            if(this.keyboard.F == true){
+                console.log('mute')
+            }
+        }, 250);
     }
 
     endOfGame() {
