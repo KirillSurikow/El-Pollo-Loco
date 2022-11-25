@@ -35,9 +35,10 @@
     <title>El Pollo Loco</title>
 </head>
 
-<body onload="init()">
+<body onload="bindBtsPressEvents(), bindKeyPressEvents(), init()">
 
     <h1>El Pollo Loco</h1>
+
     <div id="fullScreen" class="screen">
         <canvas id="canvas" height="480px" width="720px"></canvas>
         <div class="responsiveNav" id="responsiveNav">

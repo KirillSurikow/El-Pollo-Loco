@@ -35,7 +35,7 @@ class World {
         this.start = new Start();
         this.drawStartScreen();
         window.addEventListener('keypress', (e) => {
-            if (e.keyCode == 13) {
+            if (e.keyCode == 13 && this.gameIsRunning == false) {
                 this.gameIsRunning = true;
                 this.initGame();
             }
@@ -74,59 +74,65 @@ class World {
     }
 
     endOfGame() {
-        this.pauseThemeSound();
-        this.startEndSounds();
-        this.prepareRestart();
-        this.stopIntervals();
-    }
-
-    stopIntervals() {
-        let intervalsStopped = false;
-        let interval5 = setInterval(() => {
-            if (this.character.energy == 0 && intervalsStopped == false || this.level.endboss[0].energy == 0 && intervalsStopped == false) {
+        let endOfGame = setInterval(() => {
+            if (this.character.energy == 0 || this.level.endboss[0].energy == 0) {
+                clearInterval(endOfGame);
+                this.pauseThemeSound();
+                this.startEndSounds();
                 this.resetIntervals();
-                intervalsStopped = true;
+                this.prepareRestart();
             }
         }, 500);
-        this.intervalIDsWorld.push(interval5);
     }
+
+
+    /**
+    * clearing all intervals of the game
+    * 
+    */
+    resetIntervals() {
+        for (let i = 1; i < 9999; i++) {
+            window.clearInterval(i);
+        }
+    }
+
+    resetStatusbars() {
+        this.updateBottleBar();
+        this.updateCoinBar();
+        this.healthBar.setPercentage(this.character.energy, this.healthBar.ImagesHealth);
+    }
+
+    /**
+   * go back to start screen and reset the game
+   * 
+   */
+    prepareRestart() {
+        setTimeout(() => {
+            this.resetVariables();
+            this.drawStartScreen();
+            this.gameIsRunning = false;
+        }, 7000);
+    }
+
 
     pauseThemeSound() {
-        let paused = false;
-        let interval6 = setInterval(() => {
-            if (this.character.energy == 0 && paused == false) {
-                this.theme_sound.pause();
-                paused = true;
-            }
-            if (this.level.endboss[0].energy == 0 && paused == false) {
-                this.theme_sound.pause();
-                paused = true;
-            }
-        }, 500);
-        this.intervalIDsWorld.push(interval6);
+        this.theme_sound.pause();
     }
 
     startEndSounds() {
-        let playedFirstTime = true;
-        let interval7 = setInterval(() => {
-            if (this.character.energy == 0 && playedFirstTime == true) {
-                this.loss_sound.play();
-                playedFirstTime = false;
-                setTimeout(() => {
-                    this.loss_sound.pause();
-                }, 7000);
-            }
-        }, 500);
-        let interval8 = setInterval(() => {
-            if (this.level.endboss[0].energy == 0 && playedFirstTime == true) {
-                this.win_sound.play();
-                playedFirstTime = false;
-                setTimeout(() => {
-                    this.win_sound.pause();
-                }, 7000);
-            }
-        }, 500);
-        this.intervalIDsWorld.push(interval7, interval8);
+        if (this.character.energy == 0) {
+            this.loss_sound.play();
+            setTimeout(() => {
+                this.loss_sound.pause();
+            }, 7000);
+        }
+        if (this.level.endboss[0].energy == 0) {
+            this.win_sound.play();
+
+            setTimeout(() => {
+                this.win_sound.pause();
+            }, 7000);
+        }
     }
 
     /**
@@ -178,54 +184,20 @@ class World {
 
 
 
-    /**
-     * go back to start screen and reset the game
-     * 
-     */
-    prepareRestart() {
-        let restart = false;
-        setInterval(() => {
-            if (this.character.energy == 0 && restart == false || this.level.endboss[0].energy == 0 && restart == false) {
-                restart = true;
-                setTimeout(() => {
-                    this.drawStartScreen();
-                    this.resetVariables();
-                    init();
-                    this.gameIsRunning = false;
-                }, 7000);
-            }
-        }, 500);
-    }
 
-    /**
-     * clearing all intervals of the game
-     * 
-     */
-    resetIntervals() {
-        this.intervalIDsWorld.forEach(clearInterval);
-        this.character.intervalIDsCharacter.forEach(clearInterval);
-        this.level.endboss[0].intervalIDsEndboss.forEach(clearInterval);
-        this.clearIntervalChickens();
-        this.resetRemainingIntervals();
-       
-            for(let i = 0; i < 999; i++){
-                clearInterval(i);
-            }
-                
-        
-    }
+
 
     // resetRemainingIntervals() {
     //     clearInterval(83);
     // }
 
 
-    clearIntervalChickens() {
-        for (let i = 0; i < this.level.enemies.length; i++) {
-            let chicken = this.level.enemies[i];
-            chicken.intervalIDsChicken.forEach(clearInterval);
-        }
-    }
+    // clearIntervalChickens() {
+    //     for (let i = 0; i < this.level.enemies.length; i++) {
+    //         let chicken = this.level.enemies[i];
+    //         chicken.intervalIDsChicken.forEach(clearInterval);
+    //     }
+    // }
 
     resetVariables() {
         this.character.x = 120;
@@ -235,16 +207,9 @@ class World {
         this.character.coins = 0;
         this.level.endboss.x = 2500;
         this.throwableObjects = [];
+        this.resetStatusbars();
         this.level = '';
     }
-
-    // pauseSounds() {
-    //     setInterval(() => {
-    //         this.win_sound.pause();
-    //         this.loss_sound.pause();
-    //     }, 7000);
-
-    // }
 
 
     /**
@@ -343,6 +308,7 @@ class World {
     updateBottleBar() {
         let progress = Math.round((this.character.bottles / this.level.bottles.length) * 100);
         this.bottleBar.setPercentage(progress, this.bottleBar.ImagesBottle);
+        console.log('done')
     }
 
     removeBottle(id) {
