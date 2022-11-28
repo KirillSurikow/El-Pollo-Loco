@@ -10,7 +10,10 @@ class Coin extends CollectableObject{
         right : 23
     }
     
-
+    /**
+     * 
+     * @param {number} id to identify individual coins
+     */
     constructor(id){
         super();
         this.id = id;

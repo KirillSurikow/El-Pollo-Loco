@@ -55,7 +55,7 @@ class Character extends moveableObject {
         'img/2_character_pepe/4_hurt/H-43.png'
     ]
     world;  // character nimmt hier die Instanz World auf und kann somit auf die Variablen der world zugreifen wie z.B. keyboard
-    
+
     constructor() {
         super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
         this.loadImages(this.walkingImages);          /* Befehl wird an die superklasse weitergegeben*/
@@ -68,59 +68,87 @@ class Character extends moveableObject {
 
     hitByEndboss() {
         this.energy -= 10;
-        if (this.energy <= 0) {
+        if (this.dead())
             this.energy = 0;
-        } else {
+        else
             this.lastHit = new Date().getTime();
-        }
+    }
+
+    dead() {
+        return this.energy <= 0
     }
 
     animate() {
-        let i = 0;
-       let interval1 = setInterval(() => {
-            this.world.walking_sound.pause();
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.energy > 0) {
-                console.log(this.world.keyboard.RIGHT)
-                this.moveRight();
-                this.otherDirection = false;
-                this.world.walking_sound.play()
-            }
-            
-            if (this.world.keyboard.LEFT && this.x > 0 && this.energy > 0) {
-                this.moveLeft();
-                this.otherDirection = true;
-                this.world.walking_sound.play();
-            }
-           
-            if (this.world.keyboard.SPACE && !this.isAboveGround() && this.energy > 0) {
-                this.world.walking_sound.pause();
-                this.world.jumping_sound.play();
-                this.jump();
-            }
-            this.world.camera_x = -this.x + 100;
-        }, 1000 / 60)
-
-
-        let interval2 = setInterval(() => {
-            if (this.isHurt()) {
-                this.playAnimation(this.hurtImages);
-            } else
-                if (this.isAboveGround()) {
-                    this.playAnimation(this.jumpingImages);
-                } else {
-                    if (this.world.keyboard.RIGHT && this.energy > 0 || this.world.keyboard.LEFT && this.energy > 0) { // man fragt ab, ob die Taste rechts gedrückt ist
-                        this.playAnimation(this.walkingImages);
-                    }
-                }
-        } , 50)
-        let interval3 = setInterval(() => {
-            if (this.isDead() && i < 7) {
-                this.playAnimation(this.deadImages);
-                i++;
-            }
-        }, 200);
+        let interval1 = setInterval(() => this.moveCharacter(), 1000 / 60);
+        let interval2 = setInterval(() => this.playCharacter(), 50);
+        let interval3 = setInterval(() => this.deadCharacter(), 200);
         this.intervalIDsCharacter.push(interval1, interval2, interval3)
     }
 
+    moveCharacter() {
+        this.world.walking_sound.pause();
+        if (this.shallMoveRight())
+            this.moveToRight();
+        if (this.shallMmoveLeft())
+            this.moveToLeft();
+        if (this.shallJump())
+            this.jumpCharacter();
+        this.adjustCamera()
+    }
 
+    shallMoveRight() {
+        return this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.energy > 0;
+    }
+
+    moveToRight() {
+        this.moveRight();
+        this.otherDirection = false;
+        this.world.walking_sound.play()
+    }
+
+    shallMmoveLeft() {
+        return this.world.keyboard.LEFT && this.x > 0 && this.energy > 0;
+    }
+
+    moveToLeft() {
+        this.moveLeft();
+        this.otherDirection = true;
+        this.world.walking_sound.play();
+    }
+
+    shallJump() {
+        return this.world.keyboard.SPACE && !this.isAboveGround() && this.energy > 0;
+    }
+
+    jumpCharacter() {
+        this.world.walking_sound.pause();
+        this.world.jumping_sound.play();
+        this.jump();
+    }
+
+    adjustCamera() {
+        this.world.camera_x = -this.x + 100;
+    }
+
+    playCharacter() {
+        if (this.isHurt())
+            this.playAnimation(this.hurtImages);
+        else if (this.isAboveGround())
+            this.playAnimation(this.jumpingImages);
+        else if (this.movingAndGrounded()) 
+            this.playAnimation(this.walkingImages);
+
+    }
+
+    movingAndGrounded() {
+        return this.world.keyboard.RIGHT && this.energy > 0 || this.world.keyboard.LEFT && this.energy > 0;
+    }
+
+    deadCharacter(){
+        let i = 0;
+        if (this.isDead() && i < 7) {
+            this.playAnimation(this.deadImages);
+            i++;
+        }
+    }
 }

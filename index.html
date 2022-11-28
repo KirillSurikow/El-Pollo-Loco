@@ -35,27 +35,51 @@
     <title>El Pollo Loco</title>
 </head>
 
-<body onload="bindBtsPressEvents(), bindKeyPressEvents(), init()">
+<body onload="bindBtsPressEvents(), bindKeyPressEvents(), init(), installToggleMute()">
 
     <h1>El Pollo Loco</h1>
 
     <div class="content">
-        <div class="controls">
-            <div>Arrows Left/Right = Walk</div>
-            <div>Space = Jump</div>
-            <div>D = Throw Bottle</div>
-            <div onclick="initFullScreen('fullScreen')">fullScreen</div>
-        </div>
+
 
         <div id="fullScreen" class="screen">
+            <img class="click" id="click" src="img/navigation/play.png">
             <div class="responsiveHeadNav" id="responsiveHeadNav">
                 <div class="navSection">
+                    <button onclick="toggleTarget()" class="navBtn">
+                        <img src="img/navigation/target.png">
+                    </button>
+                    <button onclick="toggleControls()" class="navBtn2">
+                        <img src="img/navigation/controls.png">
+                    </button>
+                </div>
+                <div class="navSection">
+                    <img class="phone d-none" id="turnAlarm" src="img/navigation/cell-phone.png">
                     <button class="navBtn" id="mute">
                         <img src="img/navigation/volume-mute.png">
                     </button>
-                    <button class="navBtn" id="fullscreenBtn">
+                    <button onclick="toggleFullScreen('fullScreen')" class="navBtn3" id="fullscreenBtn">
                         <img src="img/navigation/fullscreen.png">
                     </button>
+                </div>
+            </div>
+            <div class="popUpControls d-none" id="popUpControls">
+                <div>Arrows Left/Right = Walk</div>
+                <div>Space = Jump</div>
+                <div>D = Throw Bottle</div>
+            </div>
+            <div class="popUpTarget d-none" id="popUpTarget">
+                <div>
+                    Avoid colliding with the chickens.
+                </div>
+                <div>
+                    Defeat the chicks and chickens by throwing bottles on them.
+                </div>
+                <div>
+                    Or by jumping on their heads.
+                </div>
+                <div>
+                    Defeat the endboss by throwing multiple bottles on him.
                 </div>
             </div>
             <canvas id="canvas" height="480px" width="720px"></canvas>
@@ -79,20 +103,7 @@
             </div>
         </div>
 
-        <div>
-            <div>
-                Avoid colliding with the chickens.
-            </div>
-            <div>
-                Defeat the chicks and chickens by throwing bottles on them.
-            </div>
-            <div>
-                Or by jumping on their heads.
-            </div>
-            <div>
-                Defeat the endboss by throwing multiple bottles on him.
-            </div>
-        </div>
+
 
     </div>
 

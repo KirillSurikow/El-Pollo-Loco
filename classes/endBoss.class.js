@@ -85,69 +85,96 @@ class Endboss extends moveableObject {
 
     removeEnergyEndBoss() {
         this.energy -= 20;
-        if (this.energy <= 0) {
+        if (this.energy <= 0)
             this.energy = 0;
-        } else {
+        else
             this.lastHit = new Date().getTime();
-        }
     }
-
 
     animate() {
         let i = 0;
-        let j = 0;
-        let k = 0;
-       let interval1 = setInterval(() => {
-            if (this.isHurt()) {
-                this.playAnimation(this.hurtImages);
-                this.hurtSound.play();
-            };
-            if (this.isDead() && j <= 2) {
-                this.playAnimation(this.deadImages);
-                j++;
-                clearInterval(this.chickenBossMoving);
-                clearInterval(this.chickenBossWalking);
-            }
-            if (this.isDead() && j == 3) {
-                this.playAnimation(this.deadImage);
-            }
-        }, 50);
-        let interval2 = setInterval(() => {
-            if (this.world.character.x < 4020 && i < 8 && this.energy > 0) {
-                this.playAnimation(this.walkingImages);
-            }
-        }, 200);
+        let interval1 = setInterval(() => this.animateDamage(), 50);
+        let interval2 = setInterval(() => this.inactiveEndboss(i), 200);
         let interval3 = setInterval(() => {
-            if (this.world.character.x > 4020 && i < 8 && this.energy > 0) {
-                this.playAnimation(this.alertImages);
-                this.alertSound.play();
+            if (this.alerted(i)) {
+                this.animateAlert();
+                this.animateWalkAndAttack(i);
                 i++;
             }
         }, 200);
         let interval4 = setInterval(() => {
-            if (i >= 8 && this.energy > 0) {
-
+            if (this.shallMoveLeft(i)) {
                 this.moveLeft();
             }
         }, 1000 / 60);
+        this.intervalIDsEndboss.push(interval1, interval2, interval3, interval4,);
+    }
+
+    shallMoveLeft(i) {
+        return i >= 7 && this.energy > 0;
+    }
+
+    animateWalkAndAttack(i) {
+        let k = 0;
         let interval5 = setInterval(() => {
-            if (i >= 8 && k < 19 && this.energy > 0 ) {
+            if (this.shallAnimateWalk(i, k)) {
                 this.playAnimation(this.walkingImages);
                 k++;
-            }  
+                i++;
+            }
         }, 100);
-        let interval6= setInterval(() => {
-            if (i >= 8 && k >= 18 && k < 41 && this.energy > 0 ) {
+        let interval6 = setInterval(() => {
+            if (this.shallAttack(i, k)) {
                 this.playAnimation(this.attackingImages);
                 k++;
-               
+                i++;
             }
-            if (k == 41) {
+            if (k == 41)
                 k = 0;
-                
-            }
         }, 50);
-        this.intervalIDsEndboss.push(interval1, interval2, interval3, interval4, interval5, interval6);
+        this.intervalIDsEndboss.push(interval5, interval6);
+    }
+
+    shallAnimateWalk(i, k){
+        return i >= 7 && k < 19 && this.energy > 0;
+    }
+
+    shallAttack(i, k){
+        return i >= 7 && k >= 18 && k < 41 && this.energy > 0;
+    }
+
+    inactiveEndboss(i) {
+        if (this.notInEndzone(i))
+            this.playAnimation(this.walkingImages);
+    }
+
+    notInEndzone(i) {
+        return this.world.character.x < 4020 && i < 8 && this.energy > 0;
+    }
+
+    animateDamage() {
+        let j = 0;
+        if (this.isHurt()) {
+            this.playAnimation(this.hurtImages);
+            this.hurtSound.play();
+        };
+        if (this.isDead() && j <= 2) {
+            this.playAnimation(this.deadImages);
+            j++;
+            clearInterval(this.chickenBossMoving);
+            clearInterval(this.chickenBossWalking);
+        }
+        if (this.isDead() && j == 3)
+            this.playAnimation(this.deadImage);
+    }
+
+    animateAlert() {
+        this.playAnimation(this.alertImages);
+        this.alertSound.play();
+    }
+
+    alerted(i) {
+        return this.world.character.x > 4020 && i < 8 && this.energy > 0;
     }
 }
 

@@ -28,46 +28,68 @@ class World {
     jumping_sound = new Audio('audio/jump.mp3');
     muted = false;
 
-
-
-
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard; // die Variable keyboard aus der Klasse game wird zu der eigenen Variable keyboard
         this.start = new Start();
         this.drawStartScreen();
-        window.addEventListener('keypress', (e) => {
-            if (e.keyCode == 13 && this.gameIsRunning == false) {
+        this.checkMute();
+        this.installGameStart()
+    }
+
+    installGameStart(){
+        let startBtn = document.getElementById('click')
+        startBtn.addEventListener('click', () => {
+            if(!this.gameIsRunning){
                 this.gameIsRunning = true;
                 this.initGame();
-            }
-            if (e.keyCode == 70 && this.muted == false ) {
-                console.log('mute');
-                this.pain_sound.volume = 0;
-                this.chickenSmall_sound.volume = 0;
-                this.collectBottle_sound.volume = 0;
-                this.collectCoin_sound.volume = 0;
-                this.theme_sound.volume = 0;
-                this.win_sound.volume = 0;
-                this.loss_sound.volume = 0;
-                this.walking_sound.volume = 0;
-                this.jumping_sound.volume = 0;
-                this.muted = true;
-            }
-            if (e.keyCode == 70 && this.muted == true) {
-                this.pain_sound.volume = 1;
-                this.chickenSmall_sound.volume = 1;
-                this.collectBottle_sound.volume = 1;
-                this.collectCoin_sound.volume = 1;
-                this.theme_sound.volume = 0.25;
-                this.win_sound.volume = 1;
-                this.loss_sound.volume = 1;
-                this.walking_sound.volume = 1;
-                this.jumping_sound.volume = 1;
-                this.muted = false;
+                this.hideStartBtn()
             }
         })
+    }
+
+    hideStartBtn(){
+        let btn = document.getElementById('click');
+        btn.style.display = 'none';
+    }
+
+    showStartBtn(){
+        let btn = document.getElementById('click');
+        btn.style.display = 'flex'; 
+    }
+
+    checkMute() {
+        setInterval(() => {
+            if (this.keyboard.mute == false)
+                this.unMute();
+            else
+                this.mute();
+        }, 500);
+    }
+
+    mute() {
+        this.pain_sound.volume = 0;
+        this.chickenSmall_sound.volume = 0;
+        this.collectBottle_sound.volume = 0;
+        this.collectCoin_sound.volume = 0;
+        this.theme_sound.volume = 0;
+        this.win_sound.volume = 0;
+        this.loss_sound.volume = 0;
+        this.walking_sound.volume = 0;
+        this.jumping_sound.volume = 0;
+    }
+
+    unMute() {
+        this.pain_sound.volume = 1;
+        this.chickenSmall_sound.volume = 1;
+        this.collectBottle_sound.volume = 1;
+        this.collectCoin_sound.volume = 1;
+        this.theme_sound.volume = 0.25;
+        this.win_sound.volume = 1;
+        this.loss_sound.volume = 1;
+        this.walking_sound.volume = 1;
+        this.jumping_sound.volume = 1;
     }
 
 
@@ -90,29 +112,24 @@ class World {
      * 
      */
     initGame() {
-        if (this.gameIsRunning == true) {
+        if (this.gameIsRunning) {
             cancelAnimationFrame(this.startScreen);
             this.character = new Character();
             this.level = initLevel();
             this.setWorld();
             this.run();
-            this.shallMute();
             this.draw();
             this.endOfGame();
         }
     }
 
-    shallMute(){
-        setInterval(() => {
-            if(this.keyboard.F == true){
-                console.log('mute')
-            }
-        }, 250);
-    }
-
+    /**
+     * central function for checking if the game is finished and initiating the linked functions
+     * 
+     */
     endOfGame() {
         let endOfGame = setInterval(() => {
-            if (this.character.energy == 0 || this.level.endboss[0].energy == 0) {
+            if (this.gameEnded()) {
                 clearInterval(endOfGame);
                 this.pauseThemeSound();
                 this.startEndSounds();
@@ -121,16 +138,18 @@ class World {
             }
         }, 500);
     }
-
+    
+    gameEnded(){
+        return this.character.energy == 0 || this.level.endboss[0].energy == 0;
+    }
 
     /**
     * clearing all intervals of the game
     * 
     */
     resetIntervals() {
-        for (let i = 1; i < 9999; i++) {
+        for (let i = 1; i < 9999; i++)
             window.clearInterval(i);
-        }
     }
 
     resetStatusbars() {
@@ -148,28 +167,32 @@ class World {
             this.resetVariables();
             this.drawStartScreen();
             this.gameIsRunning = false;
+            this.showStartBtn();
         }, 7000);
     }
-
 
     pauseThemeSound() {
         this.theme_sound.pause();
     }
 
     startEndSounds() {
-        if (this.character.energy == 0) {
+        if (this.characterDead()) {
             this.loss_sound.play();
-            setTimeout(() => {
-                this.loss_sound.pause();
-            }, 7000);
+            setTimeout(() => this.loss_sound.pause(), 7000);
         }
-        if (this.level.endboss[0].energy == 0) {
+        if (this.endbossDead()) {
             this.win_sound.play();
 
-            setTimeout(() => {
-                this.win_sound.pause();
-            }, 7000);
+            setTimeout(() => this.win_sound.pause(), 7000);
         }
+    }
+    
+    characterDead(){
+        return this.character.energy == 0;
+    }
+
+    endbossDead(){
+        return this.level.endboss[0].energy == 0;
     }
 
     /**
@@ -181,60 +204,48 @@ class World {
     }
 
     /**
-     * all intervals running in the world class
+     * functions while the game is running
      * 
      */
     run() {
+        this.startThemeSound()
+        this.runningWorldIntervals()
+    }
+
+    startThemeSound() {
         this.theme_sound.play();
         this.theme_sound.loop = true;
-        this.theme_sound.volume = 0.25;
+        if (!this.muted)
+            this.theme_sound.volume = 0;
+        else
+            this.theme_sound.volume = 0.25;
+    }
+
+    /**
+     * intervals running in the world while game is running
+     * 
+     */
+    runningWorldIntervals() {
         let interval1 = setInterval(() => {
             this.checkCollisions();
             this.checkContactWithEndBoss();
         }, 50);
-        let interval2 = setInterval(() => {
-            this.checkThrowObjects();
-        }, 200);
-        let interval3 = setInterval(() => {
-            this.hitEndBoss();
-        }, 650);
-        this.intervalIDsWorld.push(interval1, interval2, interval3)
-
+        let interval2 = setInterval(() => this.checkThrowObjects(), 200);
+        let interval3 = setInterval(() => this.hitEndBoss(), 650);
+        this.intervalIDsWorld.push(interval1, interval2, interval3);
     }
 
-
-    /**
-     * drawing the loss screen 
-     * 
-     */
     drawLossScreen() {
-        if (this.character.energy == 0) {
+        if (this.characterDead()) {
             this.addToMap(this.loss);
         }
     };
 
     drawWinScreen() {
-        if (this.level.endboss[0].energy == 0) {
+        if (this.endbossDead()) {
             this.addToMap(this.gameOver);
         }
     }
-
-
-
-
-
-
-    // resetRemainingIntervals() {
-    //     clearInterval(83);
-    // }
-
-
-    // clearIntervalChickens() {
-    //     for (let i = 0; i < this.level.enemies.length; i++) {
-    //         let chicken = this.level.enemies[i];
-    //         chicken.intervalIDsChicken.forEach(clearInterval);
-    //     }
-    // }
 
     resetVariables() {
         this.character.x = 120;
@@ -248,37 +259,54 @@ class World {
         this.level = '';
     }
 
-
     /**
      * central function for throwing objects
      * 
      */
     checkThrowObjects() {
         let id = 0;
-        if (this.keyboard.D && this.character.bottles > 0 && this.character.energy > 0) {
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, id);
-            this.throwableObjects.push(bottle);
-            this.character.bottles--;
+        if (this.throwPossible()) {
+            this.throwBottle(id)
             this.updateBottleBar();
             this.removeThrownBottle(id);
             id++;
         }
     }
 
+    throwPossible(){
+        return this.keyboard.D && this.character.bottles > 0 && this.character.energy > 0;
+    }
+
+    /**
+     * creates Bottle and adds it to the array and removes it from the bottleCount of the character
+     * 
+     */
+    throwBottle(id) {
+        let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, id);
+        this.throwableObjects.push(bottle);
+        this.character.bottles--;
+    }
+
+    /**
+     * removes the thrown bottle from the canvas after 1.5s.
+     * 
+     * @param {number} id id of the throw bottle
+     */
     removeThrownBottle(id) {
         setTimeout(() => {
-            console.log(id);
             for (let i = 0; i < this.throwableObjects.length; i++) {
                 let bottleID = this.throwableObjects[i].id;
                 if (bottleID == id) {
                     clearInterval(this.throwableObjects[i].splashSound);
-                    console.log(this.throwableObjects[i].splashSound);
                     this.throwableObjects.splice(i, 1);
                 }
             }
         }, 1500);
     }
-
+    /**
+     * central function, checking all collisions
+     * 
+     */
     checkCollisions() {
         this.collisionWithEnemies();
         this.collisionWithEndboss();
@@ -290,12 +318,16 @@ class World {
 
     collisionWithEnemies() {
         this.level.enemies.forEach(enemy => {
-            if (this.character.isColliding(enemy) && this.collisionFromAbove == false && enemy.dead == false) {
+            if (this.validCollisionEnemy(enemy)) {
                 this.character.hit();
                 this.healthBar.setPercentage(this.character.energy, this.healthBar.ImagesHealth)
                 this.pain_sound.play();
             }
         })
+    }
+
+    validCollisionEnemy(enemy){
+        return this.character.isColliding(enemy) && !this.collisionFromAbove && !enemy.dead;
     }
 
     collisionWithEndboss() {
@@ -320,9 +352,9 @@ class World {
     removeCoin(id) {
         for (let i = 0; i < this.level.coins.length; i++) {
             let coinID = this.level.coins[i].id;
-            if (coinID == id) {
+            if (coinID == id)
                 this.level.coins.splice(i, 1);
-            }
+
         }
     }
 
@@ -348,6 +380,11 @@ class World {
         console.log('done')
     }
 
+    /**
+     * removes collectable bottle from canvas
+     * 
+     * @param {number} id id of collectable bottle
+     */
     removeBottle(id) {
         for (let i = 0; i < this.level.bottles.length; i++) {
             let bottleID = this.level.bottles[i].id;
@@ -357,6 +394,10 @@ class World {
         }
     }
 
+    /**
+     * hitting enemy with a bottle
+     * 
+     */
     hitBottle() {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
@@ -376,37 +417,52 @@ class World {
         });
     }
 
+    /**
+     * initiates the dead animation of the hit chicken
+     * 
+     * @param {object} enemy 
+     */
     showDeadChicken(enemy) {
         for (let i = 0; i < this.level.enemies.length; i++) {
             let chickenHit = this.level.enemies[i];
             let chickenID = this.level.enemies[i].id;
-            if (enemy.id == chickenID) {
-                this.level.enemies[i].dead = true;
-                clearInterval(chickenHit.chickenMoving);
-            }
-
+            if (enemy.id == chickenID)
+                this.disableChicken(i, chickenHit);
         }
+    }
+
+    disableChicken(i, chickenHit) {
+        this.level.enemies[i].dead = true;
+        clearInterval(chickenHit.chickenMoving);
+        if (this instanceof Chick)
+            console.log('chick');
+        clearInterval(chickenHit.chickJumping);
     }
 
     landOnEnemy() {
         this.level.enemies.forEach(enemy => {
-            if (this.character.isJLandingOn(enemy)) {
+            if (this.character.isLandingOn(enemy)) {
                 this.collisionFromAbove = true;
                 this.showDeadChicken(enemy);
                 this.chickenSmall_sound.play();
-                setTimeout(() => {
-                    this.collisionFromAbove = false;
-                }, 500);
+                setTimeout(() => this.collisionFromAbove = false, 500);
             }
         })
     }
 
+    /**
+     * variable checking the first contact with the endboss. Ensuring the intro-animation of the endboss to be played once.
+     * 
+     */
     checkContactWithEndBoss() {
-        if (this.character.x > 1930) {
+        if (this.character.x > 1930)
             this.level.endboss.contactWithCharacter = true;
-        }
     }
 
+    /**
+     * collecting all objects to be drawn on the canvas
+     * 
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0)  // Das Bild verschiebt sich um die vordefinierte Pixelzahl
@@ -431,33 +487,42 @@ class World {
             self.draw()
         });
     }
-    addObjectsToMap(objects) {
-        objects.forEach(o => {
-            this.addToMap(o);
-        })
 
+    /**
+     * adding multiple objects of the same class
+     * 
+     * @param {object} objects 
+     */
+    addObjectsToMap(objects) {
+        objects.forEach(o =>  this.addToMap(o))
     }
 
+    /**
+     * adding a single object to the canvas
+     * 
+     * @param {object} mo 
+     */
     addToMap(mo) {
         try {
-            if (mo.otherDirection) {
+            if (mo.otherDirection)
                 this.flipImage(mo)
-            }
         } catch (error) {
             console.log(mo.otherDirection);
         }
 
-
-
         mo.draw(this.ctx); // mo steht stellvertretend für die Instanz object. Die Instanz moveableObject wird hier als mo durchgereicht.
         // mo.drawBorder(this.ctx);
-
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
     }
 
+    /**
+     * flips the character if he runs to the left direction
+     * 
+     * @param {object} mo 
+     */
     flipImage(mo) {
         this.ctx.save(); // der context hat Eigenschaften, die nachdem gespiegelten Bild wieder angenommen werden sollen
         this.ctx.translate(mo.width, 0); // Die drei folgenden Zeilen geben das folgende Bild gespiegelt zurück

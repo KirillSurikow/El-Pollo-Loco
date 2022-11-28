@@ -42,6 +42,8 @@ class ThrowableObject extends moveableObject {
         this.throw();
         this.animate();
     }
+
+ 
     throw() {
         this.speedY = 30;
         this.applyGravity();
@@ -53,11 +55,9 @@ class ThrowableObject extends moveableObject {
     }
 
     animate() {
-        this.spin = setInterval(() => {
-            this.playAnimation(this.spinning_Images);
-        }, 100);
+        this.spin = setInterval(() => this.playAnimation(this.spinning_Images), 100);
         this.splash = setInterval(() => {
-            if (this.y >= 310)
+            if (this.hitGround())
                 this.playAnimation(this.splash_Images);
         }, 50);
         this.splashSound = setInterval(() => {
@@ -65,5 +65,9 @@ class ThrowableObject extends moveableObject {
                 this.glass_sound.play();
         }, 100);
         this.bottleIntervalIDs.push(this.spin, this.splash, this.splashSound)
+    }
+
+    hitGround(){
+        return this.y >= 310;
     }
 }

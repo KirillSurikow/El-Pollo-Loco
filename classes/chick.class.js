@@ -5,6 +5,7 @@ class Chick extends moveableObject {
     y = 370;
     intervalIDsChicken = [];
     chickenMoving;
+
     offset = {
         top: 15,
         bottom: 0,
@@ -26,6 +27,10 @@ class Chick extends moveableObject {
 
     imageDead = ['img/3_enemies_chicken/chicken_small/2_dead/dead.png'];
 
+    /**
+     * 
+     * @param {number} id every chick gets an id, to identify individual hits on chicks
+     */
     constructor(id) {
         super();
         this.id = id;
@@ -39,20 +44,15 @@ class Chick extends moveableObject {
     };
 
     animate() {
-        this.chickJumping = setInterval(() => {
-            this.jump();
-        }, 3000);
-        this.chickenMoving = setInterval(() => {
-            this.moveLeft();
-        }, 1000 / 60);
-        let chickenWalking = setInterval(() => {
-            this.playAnimation(this.walkingImages);
-        }, 200)
-        let chickenDead = setInterval(() => {
-            if (this.dead == true) {
-                this.playAnimation(this.imageDead);
-            }
-        }, 200)
-        this.intervalIDsChicken.push(this.chickenMoving, chickenWalking, chickenDead)
+        this.chickJumping = setInterval(() => this.jump(), 3000);
+        this.chickenMoving = setInterval(() => this.moveLeft(), 1000 / 60);
+        let chickenWalking = setInterval(() => this.playAnimation(this.walkingImages), 200);
+        let chickenDead = setInterval(() => this.deadChicken(), 200);
+        this.intervalIDsChicken.push(this.chickenMoving, chickenWalking, chickenDead);
+    }
+
+    deadChicken() {
+        if (this.dead)
+            this.playAnimation(this.imageDead);
     }
 }

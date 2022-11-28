@@ -49,7 +49,7 @@ class moveableObject extends DrawAbleObject {
     jump() {
         this.speedY = 30;
     }
-
+   
     hit() {
         this.energy -= 5;
         if (this.energy <= 0) {
@@ -62,10 +62,28 @@ class moveableObject extends DrawAbleObject {
     isDead() {
         return this.energy == 0;
     }
-
+    
+    /**
+     * limits the amount of damage, that can be took by one collision
+     * 
+     * @returns a boolean
+     */
     isHurt() {
         let timePassed = new Date().getTime() - this.lastHit;
         timePassed = timePassed / 1000;
         return timePassed < 1.5;
+    }
+    
+    /**
+     * decides wheter the character's feetzone collides with enemy's headzone
+     * 
+     * @param {object} obj 
+     * @returns boolean
+     */
+    isLandingOn(obj) {
+        return this.x + this.width - this.landZone.right > obj.x + obj.landZone.left &&
+        this.y + this.height - this.landZone.bottom > obj.y + obj.landZone.top &&
+        this.x + this.landZone.left < obj.x + obj.width - obj.landZone.right &&
+        this.y + this.landZone.top < obj.y + obj.height - obj.landZone.bottom
     }
 }

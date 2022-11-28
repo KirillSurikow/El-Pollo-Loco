@@ -21,6 +21,12 @@ class Bottle extends CollectableObject{
         this.positionRandom();
     }
 
+     
+    /**
+     * 
+     * @param {*} array with avaiable images of the bottle
+     * @returns random path
+     */
     randomImage(array){
         return array[Math.floor(Math.random()*array.length)];  
     }
