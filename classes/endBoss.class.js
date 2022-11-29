@@ -11,6 +11,9 @@ class Endboss extends moveableObject {
     intervalIDsEndboss = [];
     alertSound = new Audio('audio/chickenBig.mp3');
     hurtSound = new Audio('audio/chickenSmall.mp3')
+    movingCounter = 0;
+    attackingCounter = 0;
+
     offset = {
         top: 0,
         bottom: 0,
@@ -91,80 +94,86 @@ class Endboss extends moveableObject {
             this.lastHit = new Date().getTime();
     }
 
+    /**
+     * initiating all intervals linked to the endboss
+     * 
+     */
     animate() {
-        let i = 0;
         let interval1 = setInterval(() => this.animateDamage(), 50);
-        let interval2 = setInterval(() => this.inactiveEndboss(i), 200);
-        let interval3 = setInterval(() => {
-            if (this.alerted(i)) {
-                this.animateAlert();
-                this.animateWalkAndAttack(i);
-                i++;
-            }
-        }, 200);
-        let interval4 = setInterval(() => {
-            if (this.shallMoveLeft(i)) {
-                this.moveLeft();
-            }
-        }, 1000 / 60);
-        this.intervalIDsEndboss.push(interval1, interval2, interval3, interval4,);
+        let interval2 = setInterval(() => this.inactiveEndboss(), 200);
+        let interval3 = setInterval(() => this.isAlerted(), 200);
+        let interval4 = setInterval(() => this.isMovingLeft(), 1000 / 60);
+        let interval5 = setInterval(() => this.isAnimatingWalk(), 100);
+        let interval6 = setInterval(() => this.isAttacking(), 50);
+        this.intervalIDsEndboss.push(interval1, interval2, interval3, interval4, interval5, interval6);
     }
 
-    shallMoveLeft(i) {
-        return i >= 7 && this.energy > 0;
+    isAlerted(){
+        if (this.alerted()) {
+            console.log('works')
+            this.animateAlert();
+            this.movingCounter++;
+        }
     }
 
-    animateWalkAndAttack(i) {
-        let k = 0;
-        let interval5 = setInterval(() => {
-            if (this.shallAnimateWalk(i, k)) {
-                this.playAnimation(this.walkingImages);
-                k++;
-                i++;
-            }
-        }, 100);
-        let interval6 = setInterval(() => {
-            if (this.shallAttack(i, k)) {
-                this.playAnimation(this.attackingImages);
-                k++;
-                i++;
-            }
-            if (k == 41)
-                k = 0;
-        }, 50);
-        this.intervalIDsEndboss.push(interval5, interval6);
+    isMovingLeft(){
+        if (this.shallMoveLeft()) {
+            this.moveLeft();
+        }
     }
 
-    shallAnimateWalk(i, k){
-        return i >= 7 && k < 19 && this.energy > 0;
+    shallMoveLeft() {
+        return this.movingCounter >= 7 && this.energy > 0;
     }
 
-    shallAttack(i, k){
-        return i >= 7 && k >= 18 && k < 41 && this.energy > 0;
+    isAnimatingWalk(){
+        if (this.shallAnimateWalk()) {
+            this.playAnimation(this.walkingImages);
+            this.attackingCounter++;
+            this.movingCounter++;
+        }
     }
 
-    inactiveEndboss(i) {
-        if (this.notInEndzone(i))
+    isAttacking(){
+        if (this.shallAttack()) {
+            this.playAnimation(this.attackingImages);
+            this.attackingCounter++;
+            this.movingCounter++;
+        }
+        if (this.attackingCounter == 41)
+            this.attackingCounter = 0;
+    }
+
+    shallAnimateWalk(){
+        return this.movingCounter >= 7 && this.attackingCounter < 19 && this.energy > 0;
+    }
+
+    shallAttack(){
+        return this.movingCounter >= 7 && this.attackingCounter >= 18 && this.attackingCounter < 41 && this.energy > 0;
+    }
+
+    inactiveEndboss() {
+        if (this.notInEndzone())
             this.playAnimation(this.walkingImages);
     }
 
-    notInEndzone(i) {
-        return this.world.character.x < 4020 && i < 8 && this.energy > 0;
+    notInEndzone() {
+        return this.world.character.x < 4020 && this.movingCounter < 8 && this.energy > 0;
     }
 
     animateDamage() {
-        let j = 0;
+        let hurtCounter = 0;
         if (this.isHurt()) {
             this.playAnimation(this.hurtImages);
             this.hurtSound.play();
         };
-        if (this.isDead() && j <= 2) {
+        if (this.isDead() && hurtCounter <= 2) {
             this.playAnimation(this.deadImages);
             j++;
             clearInterval(this.chickenBossMoving);
             clearInterval(this.chickenBossWalking);
         }
-        if (this.isDead() && j == 3)
+        if (this.isDead() && hurtCounter == 3)
             this.playAnimation(this.deadImage);
     }
 
@@ -173,8 +182,8 @@ class Endboss extends moveableObject {
         this.alertSound.play();
     }
 
-    alerted(i) {
-        return this.world.character.x > 4020 && i < 8 && this.energy > 0;
+    alerted() {
+        return this.world.character.x > 4020 && this.movingCounter < 8 && this.energy > 0;
     }
 }
 

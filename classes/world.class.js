@@ -327,7 +327,7 @@ class World {
     }
 
     validCollisionEnemy(enemy){
-        return this.character.isColliding(enemy) && !this.collisionFromAbove && !enemy.dead;
+        return this.character.isColliding(enemy) && !this.collisionFromAbove && !enemy.dead && !this.character.isHurt();
     }
 
     collisionWithEndboss() {
