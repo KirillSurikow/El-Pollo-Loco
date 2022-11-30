@@ -6,6 +6,8 @@ class ThrowableObject extends moveableObject {
     splash;
     splashSound;
     spin;
+    direction;
+    hitOnEndboss = false;
 
     offset = {
         top: 0,
@@ -30,9 +32,10 @@ class ThrowableObject extends moveableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ]
 
-    constructor(x, y, id) {
+    constructor(x, y, id, direction) {
         super().loadImage('img/6_salsa_bottle/salsa_bottle.png');
         this.id = id;
+        this.direction = direction;
         this.loadImages(this.spinning_Images);
         this.loadImages(this.splash_Images);
         this.x = x;
@@ -47,23 +50,33 @@ class ThrowableObject extends moveableObject {
     throw() {
         this.speedY = 30;
         this.applyGravity();
-        setInterval(() => {
-            if (this.y < 330) {
-                this.x += 10
-            }
-        }, 25);
+        if(this.direction){
+            console.log(this.direction)
+            setInterval(() => {
+                if (this.y < 330) {
+                    this.x -= 10
+                }
+            }, 25);  
+        }else{
+            console.log(this.direction)
+            setInterval(() => {
+                if (this.y < 330) {
+                    this.x += 10
+                }
+            }, 25);
+        }
     }
 
     animate() {
         this.spin = setInterval(() => this.playAnimation(this.spinning_Images), 100);
         this.splash = setInterval(() => {
-            if (this.hitGround())
+            if (this.hitGround() || this.hitOnEndboss)
                 this.playAnimation(this.splash_Images);
         }, 50);
         this.splashSound = setInterval(() => {
-            if (this.y >= 310)
+            if (this.hitGround() || this.hitOnEndboss)
                 this.glass_sound.play();
-        }, 100);
+        }, 50);
         this.bottleIntervalIDs.push(this.spin, this.splash, this.splashSound)
     }
 

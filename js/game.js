@@ -38,10 +38,14 @@ function turnDevice() {
  * 
  */
 function addaptScreen() {
-    let fullSCreen = document.getElementById('fullScreen');
-    if (window.innerWidth <= 720 && window.innerHeight <= 480)
-        switchToFullScreen(fullSCreen);
-
+    let screen = document.getElementById('canvas');
+    if (window.innerWidth <= 720 && window.innerHeight <= 480 && !fullscreenOn){
+        screen.style.width = '100%';
+        screen.style.height = '100%';
+    }else if(window.innerWidth >= 720 && window.innerHeight >= 480 && !fullscreenOn){
+        screen.style.width ='720px';
+        screen.style.height = '480px';
+    }
 }
 
 function toggleFullScreen(id) {

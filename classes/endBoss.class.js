@@ -13,6 +13,8 @@ class Endboss extends moveableObject {
     hurtSound = new Audio('audio/chickenSmall.mp3')
     movingCounter = 0;
     attackingCounter = 0;
+    hurt = false;
+    hurtCounter = 0;
 
     offset = {
         top: 0,
@@ -88,10 +90,9 @@ class Endboss extends moveableObject {
 
     removeEnergyEndBoss() {
         this.energy -= 20;
+        this.hurt = true;
         if (this.energy <= 0)
             this.energy = 0;
-        else
-            this.lastHit = new Date().getTime();
     }
 
     /**
@@ -99,13 +100,14 @@ class Endboss extends moveableObject {
      * 
      */
     animate() {
-        let interval1 = setInterval(() => this.animateDamage(), 50);
+        let interval1 = setInterval(() => this.animateDamage(), 500);
         let interval2 = setInterval(() => this.inactiveEndboss(), 200);
         let interval3 = setInterval(() => this.isAlerted(), 200);
         let interval4 = setInterval(() => this.isMovingLeft(), 1000 / 60);
         let interval5 = setInterval(() => this.isAnimatingWalk(), 100);
-        let interval6 = setInterval(() => this.isAttacking(), 50);
-        this.intervalIDsEndboss.push(interval1, interval2, interval3, interval4, interval5, interval6);
+        let interval6 = setInterval(() => this.isAttacking(), 150);
+        let interval7 = setInterval(() => this.animateDeath(), 50);
+        this.intervalIDsEndboss.push(interval1, interval2, interval3, interval4, interval5, interval6, interval7);
     }
 
     isAlerted(){
@@ -162,14 +164,21 @@ class Endboss extends moveableObject {
     }
 
     animateDamage() {
-        let hurtCounter = 0;
-        if (this.isHurt()) {
+        if (this.hurt && this.hurtCounter < 3) {
             this.playAnimation(this.hurtImages);
             this.hurtSound.play();
+            this.hurtCounter++;
         };
+        if(this.hurt && this.hurtCounter == 3){
+            this.hurt = false;
+            this.hurtCounter = 0;
+        }
+        
+    }
+
+    animateDeath(){
         if (this.isDead() && hurtCounter <= 2) {
             this.playAnimation(this.deadImages);
-            j++;
             clearInterval(this.chickenBossMoving);
             clearInterval(this.chickenBossWalking);
         }

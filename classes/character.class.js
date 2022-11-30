@@ -115,7 +115,8 @@ class Character extends moveableObject {
         let interval3 = setInterval(() => this.deadCharacter(), 200);
         let interval4 = setInterval(() => this.inactiveCharacter(), 200);
         let interval5 = setInterval(() => this.sleepingCharacter(), 200);
-        this.intervalIDsCharacter.push(interval1, interval2, interval3, interval4, interval5)
+        let interval6 = setInterval(() => this.playJump(), 150);
+        this.intervalIDsCharacter.push(interval1, interval2, interval3, interval4, interval5, interval6)
     }
 
     moveCharacter() {
@@ -159,7 +160,7 @@ class Character extends moveableObject {
         this.inactiveCounter = 0;
         this.world.walking_sound.pause();
         this.world.jumping_sound.play();
-        this.jump(); 
+        this.jump();
     }
 
     adjustCamera() {
@@ -169,27 +170,30 @@ class Character extends moveableObject {
     playCharacter() {
         if (this.isHurt())
             this.playAnimation(this.hurtImages);
-        else if (this.isAboveGround())
-            this.playAnimation(this.jumpingImages);
         else if (this.movingAndGrounded())
             this.playAnimation(this.walkingImages);
     }
 
+    playJump() {
+        if (this.isAboveGround())
+            this.playAnimation(this.jumpingImages);
+    }
+
     inactiveCharacter() {
-        if (this.isInactive() && this.inactiveCounter <= 25){
+        if (this.isInactive() && this.inactiveCounter <= 25) {
             this.playAnimation(this.standingImages);
             this.inactiveCounter++
         }
     }
 
-    isInactive(){
+    isInactive() {
         return !this.world.keyboard.SPACE && !this.world.keyboard.LEFT && !this.world.keyboard.RIGHT;
     }
 
-    sleepingCharacter(){
-      if(this.isInactive() && this.inactiveCounter > 25){
-          this.playAnimation(this.sleepingImages)
-      }
+    sleepingCharacter() {
+        if (this.isInactive() && this.inactiveCounter > 25) {
+            this.playAnimation(this.sleepingImages)
+        }
     }
 
     movingAndGrounded() {
