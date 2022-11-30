@@ -27,6 +27,7 @@ class World {
     walking_sound = new Audio('audio/walking.mp3');
     jumping_sound = new Audio('audio/jump.mp3');
     muted = false;
+    restartPrepared = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -120,6 +121,7 @@ class World {
             this.run();
             this.draw();
             this.endOfGame();
+            this.resetingRestIntervals()
         }
     }
 
@@ -133,10 +135,26 @@ class World {
                 clearInterval(endOfGame);
                 this.pauseThemeSound();
                 this.startEndSounds();
-                this.resetIntervals();
                 this.prepareRestart();
+                this.resetFirstIntervals();
             }
         }, 500);
+    }
+
+    resetFirstIntervals(){
+        this.intervalIDsWorld.forEach(interval => clearInterval(interval));
+        this.character.intervalIDsCharacter.forEach(interval => clearInterval(interval));
+    }
+
+    resetingRestIntervals() { 
+        let intervalReset = setInterval(() => {
+            if (this.restartPrepared) {
+                console.log( this.restartPrepared);
+                clearInterval(intervalReset);
+                this.resetIntervals();
+                this.restartPrepared = false;
+            }
+        }, 1000);
     }
 
     gameEnded() {
@@ -150,8 +168,8 @@ class World {
     resetIntervals() {
         setTimeout(() => {
             for (let i = 1; i < 9999; i++)
-                window.clearInterval(i);
-        }, 500);
+                clearInterval(i);
+        }, 1000);
     }
 
     resetStatusbars() {
@@ -170,16 +188,19 @@ class World {
             this.drawStartScreen();
             this.gameIsRunning = false;
             this.showStartBtn();
+            this.restartPrepared = true;
         }, 7000);
     }
 
     pauseThemeSound() {
         this.theme_sound.pause();
+        console.log('working', this.theme_sound)
     }
 
     startEndSounds() {
         if (this.characterDead()) {
             this.loss_sound.play();
+            console.log('working', this.loss_sound)
             setTimeout(() => this.loss_sound.pause(), 7000);
         }
         if (this.endbossDead()) {
@@ -217,6 +238,7 @@ class World {
     startThemeSound() {
         this.theme_sound.play();
         this.theme_sound.loop = true;
+        console.log('working', this.theme_sound)
         if (!this.muted)
             this.theme_sound.volume = 0;
         else
@@ -239,14 +261,14 @@ class World {
     }
 
     drawLossScreen() {
-        if (this.characterDead()) 
-                this.addToMap(this.loss);   
+        if (this.characterDead())
+            this.addToMap(this.loss);
     };
 
     drawWinScreen() {
-        if (this.endbossDead()) 
-             this.addToMap(this.gameOver);
-        
+        if (this.endbossDead())
+            this.addToMap(this.gameOver);
+
     }
 
     resetVariables() {
@@ -258,7 +280,7 @@ class World {
         this.level.endboss.x = 2500;
         this.throwableObjects = [];
         this.resetStatusbars();
-        this.level = '';
+        this.level = level1;
     }
 
     /**
@@ -384,7 +406,6 @@ class World {
     updateBottleBar() {
         let progress = Math.round((this.character.bottles / this.level.bottles.length) * 100);
         this.bottleBar.setPercentage(progress, this.bottleBar.ImagesBottle);
-        console.log('done')
     }
 
     /**
@@ -411,7 +432,6 @@ class World {
                 if (bottle.isColliding(enemy)) {
                     this.chickenSmall_sound.play();
                     this.showDeadChicken(enemy)
-                    console.log(bottle.hitOnEndboss)
                 }
             });
         })
@@ -422,7 +442,6 @@ class World {
             if (bottle.isColliding(this.level.endboss[0])) {
                 this.level.endboss[0].removeEnergyEndBoss();
                 bottle.hitOnEndboss = true;
-                console.log(bottle.hitOnEndboss)
             }
         });
     }
@@ -446,14 +465,13 @@ class World {
     removeDeadEnemies() {
         setTimeout(() => {
             let enemies = this.level.enemies
-        for (let i = 0; i < enemies.length; i++) {
-            let enemieDead = enemies[i].dead;
-            if (enemieDead == true) 
-                enemies.splice(i, 1)
- 
-        }
+            for (let i = 0; i < enemies.length; i++) {
+                let enemieDead = enemies[i].dead;
+                if (enemieDead == true)
+                    enemies.splice(i, 1)
+            }
         }, 3000);
-      
+
     }
 
     removeEnemy(i) {
@@ -532,12 +550,12 @@ class World {
      * @param {object} mo 
      */
     addToMap(mo) {
-        try {
-            if (mo.otherDirection)
-                this.flipImage(mo)
-        } catch (error) {
-            console.log(mo.otherDirection);
-        }
+        // try {
+        if (mo.otherDirection)
+            this.flipImage(mo)
+        // } catch (error) {
+        //     console.log(mo.otherDirection);
+        // }
 
         mo.draw(this.ctx); // mo steht stellvertretend für die Instanz object. Die Instanz moveableObject wird hier als mo durchgereicht.
         // mo.drawBorder(this.ctx);
